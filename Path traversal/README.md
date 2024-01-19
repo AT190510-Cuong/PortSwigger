@@ -25,7 +25,7 @@
 </ul>
 
 VD: với Java code:
-```java=
+```java
 File file = new File(BASE_DIRECTORY, userInput);
 if (file.getCanonicalPath().startsWith(BASE_DIRECTORY)) {
     // process file
