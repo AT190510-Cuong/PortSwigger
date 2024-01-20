@@ -91,7 +91,7 @@ mình chuyển đến trang admin và xóa người dùng carlos
 
 mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -203,7 +203,7 @@ và tương tự bài trước mình xóa được carlos
 
 mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -312,7 +312,7 @@ mình sẽ thay đổi đường dẫn avatar đến thư mục cần xóa và s
 
 mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -402,7 +402,7 @@ mình thêm ~ để đọc file backup
 
 mã nguồn có nội dung:
 
-```php=
+```php
 <?php
 
 class CustomTemplate {
@@ -471,7 +471,7 @@ Gửi request với session cookie mới. Mặc dù server trả 500 vì invalid
 
 mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -555,7 +555,7 @@ vào site map mình thấy có file CustomTemplate.php
 
 mình thêm **~** và đọc được file backup là:
 
-```php=
+```php
 <?php
 
 class CustomTemplate {
@@ -634,7 +634,7 @@ class DefaultMap {
 
 Dựa vào phân tích trên, ta tạo đoạn code generate payload như sau để xóa file /home/carlos/morale.txt:
 
-```php=
+```php
 <?php
 
 class DefaultMap {
@@ -670,7 +670,7 @@ tương tự các bài trước mình encode url và base64 và gửi lại gói
 
 mình đã viết lại script khai thác:
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
