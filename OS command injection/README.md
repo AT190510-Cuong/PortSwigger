@@ -143,7 +143,7 @@ và sẽ trả về số sản phẩm qua lệnh kiem_tra tồn kho cùng user q
 
 mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -211,7 +211,7 @@ và sau 10 giây mình thấy gói tin mới phản hồi
 
 mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -302,7 +302,7 @@ email=abc%40gmail.com;whoami>/var/www/images/whoami${IFS}||${IFS}
 
 mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
