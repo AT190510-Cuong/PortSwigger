@@ -104,7 +104,7 @@ Cách hoạt động của đoạn code trên: Kiểm tra vai trò người dùn
 
 mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -175,7 +175,7 @@ và mình vào xóa người dùng carlos
 
 mình cũng đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -252,7 +252,7 @@ mình xóa người dùng carlos qua url:
 
 mình cũng đã viết lại script khai thác:
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -361,7 +361,7 @@ Truy cập trang quản trị và mình xóa người dùng carlos bằng url
 
 mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -464,7 +464,7 @@ Submit giá trị API key tại Submit solution để hoàn thành lab này.
 
 mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -558,7 +558,7 @@ và mình submit API: `0NiOxrVK7szQ2oC0PIrQiOaWrsizFzJ7`
 
 mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -599,7 +599,7 @@ print(soup)
 
 hoặc
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -719,7 +719,7 @@ Và chúng ta có được giá trị API key của carlos: `FztLqzcT52TIg3jHFVm
 
 mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -812,7 +812,7 @@ rong URL chứa tham số id=wiener. id mang giá trị là username của ngư�
 
 mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -944,7 +944,7 @@ Truy cập vào tài khoản `carlos:h8xmypxyywrq3llemn4q` để hoàn thành la
 
 mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -1040,7 +1040,7 @@ Thực hiện ghi đè nội dung URL bằng tiêu đề `X-Original-URL`:
 
 mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -1123,7 +1123,7 @@ Tài khoản wiener được upgrade thành công!
 
 mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -1216,7 +1216,7 @@ Status code trả về 302 Found. Tức là chúng ta đã upgrade người dùn
 
 mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -1309,7 +1309,7 @@ Status code trả về 302 Found. Điều đó chứng tỏ chúng ta đã upgra
 
 mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
