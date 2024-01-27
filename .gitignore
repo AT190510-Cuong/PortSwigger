@@ -1,3 +1,6 @@
 nul
 *.py
 *.php
+*.js
+*.html
+*.txt
