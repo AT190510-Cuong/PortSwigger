@@ -311,7 +311,7 @@ link: https://portswigger.net/web-security/authentication/password-based/lab-use
 
 VD:
 
-```php=
+```php
 $connect = mysqli_connect ('localhost', 'root', '', 'user');
 
 $username = $_POST['username'];
