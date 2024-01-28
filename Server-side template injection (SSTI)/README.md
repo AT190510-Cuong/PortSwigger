@@ -443,7 +443,7 @@ mình dùng payload sau encode URL và gửi và gửi gói tin
 
 mình đã viết lại mã khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 from bs4 import BeautifulSoup
