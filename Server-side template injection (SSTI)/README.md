@@ -629,7 +629,7 @@ Truy cập xem avatar, ta thấy nội dung file `/etc/passwd` đã được tr�
 
 được source code class User:
 
-```php=
+```php
 <?php
 
 class User {
