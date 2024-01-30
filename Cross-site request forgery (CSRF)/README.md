@@ -31,6 +31,22 @@
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | trong cookie là một cài đặt đặc biệt được sử dụng để xác định rằng cookie có thể được gửi qua các yêu cầu từ trang web khác, ngay cả khi đó là yêu cầu từ trang web thứ ba. Điều này là quan trọng để hỗ trợ các tình huống như iframe hoặc các yêu cầu từ trang web khác domain trong môi trường Cross-Origin Resource Sharing (CORS). | Cấp độ bảo mật ít hạn hơn. Cookie được gửi khi yêu cầu đến từ một trang web bên ngoài (liên kết), nhưng không gửi khi yêu cầu đến từ một trang web thứ ba qua một yêu cầu POST không an toàn | Cấp độ bảo mật cao hơn. Cookie chỉ được gửi khi yêu cầu đến từ cùng một trang web. Nó giúp đề phòng nhiều hơn khỏi các tấn công liên quan đến cookie, đặc biệt là tấn công CSRF. |
 
+Ngoài các phương pháp đã xét, SameSite Cookie cũng được sử dụng ngăn chặn tấn công CSRF. Biện pháp này tập trung vào các giá trị Cookie trong request, đưa ra các quy định khác nhau cho cookies.
+
+Trước hết, chúng ta cần hiểu về khái niệm site trong tình huống này. site được cấu tạo từ
+3
+3 phần: top-level domain (TLD - các tên miền cao nhất như .com, .net, .xyz, ...), phần TLD+1 đứng ngay phía trước TLD, cùng với scheme (http, https, ...).
+
+![image](https://hackmd.io/_uploads/BkfvNlU5T.png)
+
+Khác với site, origin bao gồm toàn bộ URL:
+
+![image](https://hackmd.io/_uploads/Sy2d4e8qp.png)
+
+Như vậy, SameSite tức là hai URL có cùng scheme, TLD, TLD+1. SameOrigin là toàn bộ
+2
+2 URL cần hoàn toàn giống nhau. Các bạn có thể theo dõi bảng sau để hiểu rõ hơn thuật ngữ SameSite:
+
 ## 1. Lab: CSRF vulnerability with no defenses
 
 link: https://portswigger.net/web-security/csrf/lab-no-defenses
