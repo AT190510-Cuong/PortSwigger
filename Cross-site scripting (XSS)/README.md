@@ -633,7 +633,7 @@ CTRL+U mình được đoạn code xử lý javascript
             document.write('<option selected>'+store+'</option>');
         }
         for(var i=0;i<stores.length;i++) {
-            if(stores[i] === store) {
+            if(stores[i] ``` store) {
             continue;
             }
             document.write('<option>'+stores[i]+'</option>');
