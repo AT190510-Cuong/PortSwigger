@@ -1635,6 +1635,13 @@ link: https://portswigger.net/web-security/cross-site-scripting/exploiting/lab-c
 - Tương tự các bài trên, chức năng comment bị dính Stored XSS. Kiểm tra với trường comment với `<script>alert(1)</script>` thì thấy attack thành công.
 - ![image](https://hackmd.io/_uploads/rkoNSYu9p.png)
 
+- Có phải các bạn đã từng gặp tình huống sau khi đăng nhập tài khoản ở một trang web nào đó và trình duyệt đã gợi ý việc lưu trữ mật khẩu?
+- ![image](https://hackmd.io/_uploads/Syl-pCd9a.png)
+- Tính năng lưu trữ mật khẩu không chỉ giúp ích cho chúng ta tìm lại mật khẩu trong trường hợp bị quên sau thời gian dài, mà còn giúp chúng ta tự động điền (autofill) tài khoản ở các lần đăng nhập sau:
+- Chức năng hữu ích này đã gián tiếp giúp kẻ tấn công có thể lợi dụng lỗ hổng XSS nhằm đánh cắp mật khẩu ở chế độ autofill trên trình duyệt của nạn nhân. Chẳng hạn, kẻ tấn công có thể lợi dụng XSS tạo một form login giả trên trang web với script
+- Kết quả sau khi comment, với lỗ hổng Stored XSS sẽ luôn hiển thị form giả này tới mỗi nạn nhân truy cập bài viết chứa script
+- Với chức năng auto-fill password sẽ giúp kẻ tấn công thu thập username và password đã lưu của nạn nhân và gửi chúng tới `https://attacker.com/capture` bằng XMLHttpRequest(). Hậu quả của dạng tấn công này nếu thành công sẽ lớn hơn so với việc chỉ đánh cắp được cookie nạn nhân do kẻ tấn công có thể thực hiện việc giả mạo bất cứ lúc nào (trong trường hợp không có xác thực 2FA). Ngoài ra nạn nhân còn có thể bị đánh cắp tài khoản ở các nền tảng khác do người dùng thường lưu trữ các tài khoản khác nhau với chung một mật khẩu!
+
 ### Khai thác
 
 - Như PortSwigger đã hướng dẫn, payload sẽ dựa vào việc tạo ra input giả để người dùng sử dụng password autofill để nhập vào, sau đó lấy giá trị của nó để gửi về
@@ -2080,6 +2087,8 @@ link: https://portswigger.net/web-security/cross-site-scripting/content-security
 
 ### Phân tích
 
+- Content Security Policy (CSP) là một tính năng bảo mật web cho phép người quản trị trang web định cấu hình các nguồn tài nguyên cho phép tải và sử dụng trên trang web đó. Điều này có thể giúp ngăn chặn các cuộc tấn công XSS bằng cách không cho phép tài nguyên không đáng tin cậy được tải và sử dụng trên trang web.
+- Một ví dụ khác cho phép tải tài nguyên từ cùng một nguồn (self) như trước, nhưng cũng cho phép tải JavaScript từ `https://trustedscripts.example.com`, hình ảnh từ `https://trustedimages.example.com` và CSS từ `https://trustedstyles.example.com`. Tất cả các nguồn khác sẽ bị cấm.
 - CSP, hay Content Security Policy, là một bộ các chính sách an ninh được triển khai trên trang web để ngăn chặn các loại tấn công như Cross-Site Scripting (XSS). CSP giúp giảm nguy cơ của XSS bằng cách giới hạn hoặc ngăn chặn việc thực thi mã JavaScript không an toàn từ nguồn không tin cậy.
 - mình nhập `<img src=1 onerror=alert(1)>`
 
@@ -2093,7 +2102,11 @@ Quan sát thấy tải trọng được phản ánh nhưng CSP ( Content Securit
 
 ![image](https://hackmd.io/_uploads/ryiBRT_qa.png)
 
-Việc tiêm sử dụng `script-src-elem` trong CSP. Lệnh này cho phép mình chỉ nhắm mục tiêu script các phần tử. Bằng cách sử dụng lệnh này, mình có thể ghi đè `script-src` các quy tắc hiện có cho phép mình chèn `unsafe-inline`, điều này cho phép mình sử dụng các tập lệnh inline scripts.
+kiểm tra CSP tại https://csp-evaluator.withgoogle.com/ cho kết quả an toàn:
+
+![image](https://hackmd.io/_uploads/ByWRKR_56.png)
+
+Việc tiêm sử dụng `script-src-elem` trong CSP. Lệnh này cho phép mình chỉ nhắm mục tiêu script các phần tử. Bằng cách sử dụng lệnh này, mình có thể ghi đè `script-src` các quy tắc hiện có cho phép mình chèn `unsafe-inline`, điều này cho phép mình sử dụng các tập lệnh inline scripts, có nghĩa là JavaScript được phép viết trực tiếp trong mã HTML của trang web, thay vì được tải từ một tệp riêng biệt
 
 ### Khai thác
 
