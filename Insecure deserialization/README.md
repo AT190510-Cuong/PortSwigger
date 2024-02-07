@@ -104,6 +104,20 @@ Dưới đây là một ví dụ về luồng để giúp bạn hình dung một
 - Sau đó sẽ được file operator deserialized bằng việc load các Oblject có trong trường mainfest của file phar vào trong chương trình hiện tại
 - Cuối cùng lợi dụng các magic method để thực hiện các vụ không mong muốn.
 
+- Ta có thể thấy format serialized data trong Java khác hoàn toàn so với serialized data trong PHP
+
+![image](https://hackmd.io/_uploads/rybwvRxsa.png)
+
+```php!
+<!-- Serialized data trong PHP -->
+
+O:4:"User":2:{s:10:"\0User\0name";N;s:9:"\0User\0age";N;}
+```
+
+Serialized data của Java sẽ có cấu trúc như sau
+
+![image](https://hackmd.io/_uploads/B1ZiDRxjp.png)
+
 ## 1. Lab: Modifying serialized objects
 
 ### Đề bài
