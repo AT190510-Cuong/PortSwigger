@@ -554,8 +554,8 @@ Xem xét cấu hình trong trang web:
 **multipart/form-data** là một loại MIME được sử dụng khi gửi dữ liệu biểu mẫu từ trình duyệt web đến máy chủ thông qua phương thức POST trong HTTP.
 
 - dữ liệu từ các trường biểu mẫu như văn bản, hình ảnh hoặc tệp đính kèm sẽ được mã hóa và gửi dưới dạng một loạt các phần riêng biệt, mỗi phần đại diện cho một trường biểu mẫu cụ thể. Mỗi phần này chứa tiêu đề để xác định tên trường và loại dữ liệu của nó.
-
-![image](https://hackmd.io/_uploads/rJorO-Hoa.png)
+- **Content-Disposition** là một tiêu đề HTTP được sử dụng để xác định cách mà tài nguyên nên được xử lý hoặc hiển thị. Nó thường được sử dụng trong các phản hồi HTTP từ máy chủ đến trình duyệt web, đặc biệt là khi trình duyệt nhận các tệp tải xuống. - Một trong những cách phổ biến nhất để sử dụng tiêu đề Content-Disposition là để chỉ định tên tệp và/hoặc cách trình duyệt web nên xử lý tệp đó
+  ![image](https://hackmd.io/_uploads/rJorO-Hoa.png)
 
 ## Đọc thêm
 
