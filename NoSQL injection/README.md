@@ -87,7 +87,7 @@ Bất cứ khi nào ứng dụng chấp nhận đầu vào của người dùng 
 
 ![image](https://hackmd.io/_uploads/Bkv1lzvj6.png)
 
-```!
+```
 POST /login HTTP/1.1
 Host: example.org
 Content-Type: application/x-www-form-urlencoded.
