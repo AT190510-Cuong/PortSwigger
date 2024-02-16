@@ -1,5 +1,9 @@
 # Path traversal
-## Khái niệm & khai thác & phòng tránh 
+
+## Khái niệm & khai thác & phòng tránh
+
+![image](https://hackmd.io/_uploads/BJ4PYhniT.png)
+
 <ul>
     <ul><b>Khái niệm:</b>
         <li>Directory traversal giúp kẻ tấn công có thể thu thập nội dung các tệp tin nhạy cảm, mã nguồn chương trình một cách toàn vẹn và đầy đủ hơn. Là một bước cơ sở giúp họ có thể trực tiếp tìm kiếm các cách khai thác trong mã nguồn chương trình, hoặc xây dựng một cuộc tấn công Deserialize, ... Dạng lỗ hổng này hiện nay xuất hiện khá nhiều do chức năng đọc và hiển thị tệp tin là một trong những chức năng chính của các ứng dụng web, cách khai thác lỗ hổng đa dạng cũng như những đoạn code chưa thực sư "an toàn" trước sự đe dọa của dạng lổ hổng này. Các lỗ hổng Directory traversal còn có thể trực tiếp gây ra lỗi Local File Inclusion trong trường hợp nó ghi được vào file Log hay File environment, dẫn tới chiếm quyền điều khiển server.
@@ -24,21 +28,66 @@
     
 </ul>
 
+### Dấu hiệu
+
+- các chức năng liên quan đến xử lý file sẽ có khả năng bị lỗi path traversal
+
+1. Download/upload
+2. Import/export
+3. Menu động
+4. Load resource
+5. Zip/unzip
+6. Xử lý hình ảnh
+
+![image](https://hackmd.io/_uploads/BJnbah3jT.png)
+
+vì khi ../ ra cuối cùng vẫn chỉ được thư mục "/" nên chúng ta có thể thêm nhiều dấu "../" (100 lần :) để đến thư mục "/" này
+
+![image](https://hackmd.io/_uploads/B1Vq-62oT.png)
+
+![image](https://hackmd.io/_uploads/Bk2u21aiT.png)
+
+![image](https://hackmd.io/_uploads/HycCxl6jT.png)
+
 VD: với Java code:
-```java
+
+```java=
 File file = new File(BASE_DIRECTORY, userInput);
 if (file.getCanonicalPath().startsWith(BASE_DIRECTORY)) {
     // process file
 }
 ```
 
+VD: với PHP code:
+
+![image](https://hackmd.io/_uploads/SyR1Y3nip.png)
+
+attacker có thể đọc các file nhạy cảm như
+
+![image](https://hackmd.io/_uploads/r1L9_22oa.png)
+
+### Mức độ ảnh hưởng với tam giác CIA
+
+![image](https://hackmd.io/_uploads/S11Gq2nip.png)
+
+![image](https://hackmd.io/_uploads/SJbHq22jT.png)
+
+![image](https://hackmd.io/_uploads/rJg_c22oa.png)
+
+![image](https://hackmd.io/_uploads/Syl5c32oT.png)
+
+![image](https://hackmd.io/_uploads/B1Wp53nja.png)
+
 ## 1. Lab: File path traversal, simple case
+
 link: https://portswigger.net/web-security/file-path-traversal/lab-simple
+
 ### Đề bài:
 
 ![image](https://hackmd.io/_uploads/BkhjBh8ta.png)
 
 ### Phân tích
+
 <ul>
     <li>đề bài cho chúng ta biết lab này có lỗ hổng Path traversal và chúng ta cần đọc được file /etc/passwd 
     </li>
@@ -54,7 +103,8 @@ link: https://portswigger.net/web-security/file-path-traversal/lab-simple
 
 ![image](https://hackmd.io/_uploads/S1Mivh8FT.png)
 
-### Khai thác 
+### Khai thác
+
 vậy sẽ như thế nào nếu ta đổi filename thành 1 tên khác? Nó sẽ show ra 1 ảnh khác đúng không?
 Yessss! Chúng ta sẽ khai thác lỗ hổng từ đó
 
@@ -64,10 +114,9 @@ bài không có bất cứ một lớp phòng vệ nào để ngăn chặn Path 
 
 ![image](https://hackmd.io/_uploads/rJLluhUFT.png)
 
+mình cũng đã viết lại script khai thác :100:
 
-mình cũng đã viết lại script khai thác :100: 
-
-```python
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -94,6 +143,7 @@ mục đích của chúng ta đã hoàn thành và mình cũng đã giải đư�
 ![image](https://hackmd.io/_uploads/rk_nnn8Ya.png)
 
 ## 2. Lab: File path traversal, traversal sequences blocked with absolute path bypass
+
 link: https://portswigger.net/web-security/file-path-traversal/lab-absolute-path-bypass
 
 ### Đề bài
@@ -101,6 +151,7 @@ link: https://portswigger.net/web-security/file-path-traversal/lab-absolute-path
 ![image](https://hackmd.io/_uploads/Hygnkp8K6.png)
 
 ### Phân tích
+
 <ul>
     <li>tương tự bài trước mình đã dùng burp suite chặn các request và click vào View detail để chọn xem 1 sản phẩm
     </li>
@@ -110,7 +161,8 @@ link: https://portswigger.net/web-security/file-path-traversal/lab-absolute-path
 
 ![image](https://hackmd.io/_uploads/r1I2x6UF6.png)
 
-### Khai thác 
+### Khai thác
+
 để kiểm tra lỗi Path traversal mình đã dùng các dấu **".\./"** để di chuyển lên các thư mục cha của thư mục hiện tại và với mục đích để đọc được file **/etc/passwd**
 
 và mình đã không đọc được file này như bài trước có vẻ như lab này đã có cơ chế chặn hay mã hóa các ký tự "." và "/"
@@ -127,9 +179,9 @@ và mình đã không đọc được file này như bài trước có vẻ như
 
 ![image](https://hackmd.io/_uploads/rJZ5f68ta.png)
 
-mình cũng đã viết lại script khai thác :100: 
+mình cũng đã viết lại script khai thác :100:
 
-```python
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -155,7 +207,6 @@ mục đích của chúng ta đã hoàn thành và mình cũng đã giải đư�
 
 ![image](https://hackmd.io/_uploads/B1wKrTIFT.png)
 
-
 ## 3. Lab: File path traversal, traversal sequences stripped non-recursively
 
 link: https://portswigger.net/web-security/file-path-traversal/lab-sequences-stripped-non-recursively
@@ -164,7 +215,7 @@ link: https://portswigger.net/web-security/file-path-traversal/lab-sequences-str
 
 ![image](https://hackmd.io/_uploads/BkCXZDwY6.png)
 
-### Phân tích 
+### Phân tích
 
 <ul>
     <li>tương tự bài trước mình đã dùng burp suite chặn các request và click vào View detail để chọn xem 1 sản phẩm
@@ -176,19 +227,20 @@ link: https://portswigger.net/web-security/file-path-traversal/lab-sequences-str
 ![image](https://hackmd.io/_uploads/rJG4GvwF6.png)
 
 ### khai thác
+
 để kiểm tra lỗi Path traversal mình đã dùng các dấu **".\./"** để di chuyển lên các thư mục cha của thư mục hiện tại và với mục đích để đọc được file **/etc/passwd**
 
 và mình đã không đọc được file này như bài trước có vẻ như lab này đã có cơ chế chặn hay mã hóa các ký tự "." và "/"
 
 ![image](https://hackmd.io/_uploads/BkAszvwKp.png)
 
-có vẻ là các ký tự  '.\./' đã bị loại bỏ nhưng nếu tôi gấp đôi chúng lên thì sao ví dụ ".\.'.\./'/" thì bộ lọc sẽ bỏ .\./ tại vị trí dấu **''** mà tôi đã đánh dấu và trở thành ".\./" giúp chúng ta đọc được file /etc/passwd như các bài trước 
+có vẻ là các ký tự '.\./' đã bị loại bỏ nhưng nếu tôi gấp đôi chúng lên thì sao ví dụ ".\.'.\./'/" thì bộ lọc sẽ bỏ .\./ tại vị trí dấu **''** mà tôi đã đánh dấu và trở thành ".\./" giúp chúng ta đọc được file /etc/passwd như các bài trước
 
 ![image](https://hackmd.io/_uploads/rJ2y7wwYa.png)
 
-tôi đã viết lại script khai thác 
+tôi đã viết lại script khai thác
 
-```python
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -218,7 +270,7 @@ mục đích của chúng ta đã hoàn thành và mình cũng đã giải đư�
 
 link: https://portswigger.net/web-security/file-path-traversal/lab-superfluous-url-decode
 
-### Đề bài 
+### Đề bài
 
 ![image](https://hackmd.io/_uploads/rJ2jrPPF6.png)
 
@@ -233,7 +285,7 @@ link: https://portswigger.net/web-security/file-path-traversal/lab-superfluous-u
 
 ![image](https://hackmd.io/_uploads/HJJV8wvYp.png)
 
-### khai thác 
+### khai thác
 
 <ul>
     <li>cũng như bài trước thì lab này cũng đã chặn các ký tự để chuyển thư mục </li>
@@ -251,7 +303,8 @@ vẫn chưa được mình thử encode lần nữa và may mắn là đã thàn
 ![image](https://hackmd.io/_uploads/B1PSuDDFp.png)
 
 mình đã viết lại script khai thác:
-```python
+
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -285,7 +338,7 @@ link: https://portswigger.net/web-security/file-path-traversal/lab-validate-star
 
 ![image](https://hackmd.io/_uploads/Sk27YDwYa.png)
 
-### Phân tích 
+### Phân tích
 
 <ul>
     <li>tương tự bài trước mình đã dùng burp suite chặn các request và click vào View detail để chọn xem 1 sản phẩm
@@ -298,14 +351,15 @@ link: https://portswigger.net/web-security/file-path-traversal/lab-validate-star
 
 ![image](https://hackmd.io/_uploads/rknkqwwt6.png)
 
-### khai thác 
-để kiểm tra lỗi Path traversal mình đã dùng các dấu **".\./"** để di chuyển lên các thư mục cha của thư mục hiện tại và với mục đích để đọc được file **/etc/passwd**
+### khai thác
 
+để kiểm tra lỗi Path traversal mình đã dùng các dấu **".\./"** để di chuyển lên các thư mục cha của thư mục hiện tại và với mục đích để đọc được file **/etc/passwd**
 
 ![image](https://hackmd.io/_uploads/HJDNcwDtT.png)
 
 và mình cũng đã viết lại script
-```python
+
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -339,7 +393,7 @@ link: https://portswigger.net/web-security/file-path-traversal/lab-validate-file
 
 ![image](https://hackmd.io/_uploads/r1l3ivwFa.png)
 
-### Phân tích 
+### Phân tích
 
 <ul>
     <li>tương tự bài trước mình đã dùng burp suite chặn các request và click vào View detail để chọn xem 1 sản phẩm
@@ -351,6 +405,7 @@ link: https://portswigger.net/web-security/file-path-traversal/lab-validate-file
 ![image](https://hackmd.io/_uploads/H1vMnDDKa.png)
 
 ### Khai thác
+
 <ul>
     <li>bài đã filter phần mở rộng phải là file ảnh </li>
     <li>mình đã thêm phần mở rộng đồng thời thêm ký tự null và encode url để bộ lọc vẫn nhận đây là file ảnh nhưng đến khi đọc file ở trong hệ thống lệnh sẽ bị dừng tại ký tự null </li>
@@ -359,7 +414,8 @@ link: https://portswigger.net/web-security/file-path-traversal/lab-validate-file
 ![image](https://hackmd.io/_uploads/H1OC2vwY6.png)
 
 mình cũng viết lại script khai thác:
-```python
+
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -389,4 +445,4 @@ mục đích của chúng ta đã hoàn thành và mình cũng đã giải đư�
 
 ![image](https://hackmd.io/_uploads/SycyQdwFp.png)
 
-
+<img  src="https://3198551054-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FVvHHLY2mrxd5y4e2vVYL%2Fuploads%2FF8DJirSFlv1Un7WBmtvu%2Fcomplete.gif?alt=media&token=045fd197-4004-49f4-a8ed-ee28e197008f">
