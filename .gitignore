@@ -4,3 +4,5 @@ nul
 *.js
 *.html
 *.txt
+*.json
+node_modules
