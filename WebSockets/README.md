@@ -1,7 +1,11 @@
 # WebSockets
 
 - **Khái niệm**
-  - WebSockets là giao thức truyền thông song công hoàn toàn, hai chiều được khởi tạo qua HTTP. Chúng thường được sử dụng trong các ứng dụng web hiện đại để truyền dữ liệu và lưu lượng truy cập không đồng bộ khác.
+  - socket là một điểm cuối (endpoint) của một liên kết thông tin liên lạc 2 chiều giữa 2 chương trình chạy trên hệ thống mạng. Một socket được liên kết với một cổng (PORT) để tầng TCP có thể định danh ứng dụng nào đã gửi dữ liệu đến.
+  - Thông thường có 2 dạng socket là web socket và unix socket.
+    - **Web socket** là công nghệ hỗ trợ giao tiếp 2 chiều giữa client và server dựa trên một giao thức kết nối (thường là TCP) để tạo một kết nối hiệu quả và ít tốn kém
+    - **Unix socket** là một kết nối chia sẻ dữ liệu giữa các process khác nhau trong cùng một máy tính. Khác với Web socket sử dụng một giao tiếp mạng để kết nối trên môi trường internet, Unix socket được thực hiện ở nhân hệ điều hành nhờ vậy có thể tránh được các bước như kiểm tra routing, do đó đem lại tốc độ nhanh hơn và nhẹ hơn.
+  - **WebSockets** là giao thức truyền thông song công hoàn toàn, hai chiều được khởi tạo qua HTTP. Chúng thường được sử dụng trong các ứng dụng web hiện đại để truyền dữ liệu và lưu lượng truy cập không đồng bộ khác.
   - WebSockets hỗ trợ phương thức giao tiếp 2 chiều giữa client và server thông qua TCP (port 80 và 443). Theo phân tích từ http://websocket.org/quantum.html, WebSockets có thể giảm kích thước của HTTP header lên đến 500 – 1000 lần, giảm độ trễ của network lên đến 3 lần. Do đó, hỗ trợ tốt hơn đối với các ứng dụng web apps real – time.
 
 ![image](https://hackmd.io/_uploads/SJL2VytcT.png)
@@ -9,6 +13,30 @@
 - WebSocket là một giao thức giúp truyền dữ liệu hai chiều giữa server-client qua một kết nối TCP duy nhất. Hơn nữa, webSocket là một giao thức được thiết kế để truyền dữ liệu bằng cách sử dụng cổng 80 và cổng 443 và nó là một phần của HTML5. Vì vậy, webSockets có thể hoạt động trên các cổng web tiêu chuẩn, nên không có rắc rối về việc mở cổng cho các ứng dụng, lo lắng về việc bị chặn bởi các tường lửa hay proxy server
 - Không giống với giao thức HTTP là cần client chủ động gửi yêu cầu cho server, client sẽ chời đợi để nhận được dữ liệu từ máy chủ. Hay nói cách khác với giao thức Websocket thì server có thể chủ động gửi thông tin đến client mà không cần phải có yêu cầu từ client.
 - Cấu trúc: hỗ trợ chuẩn giao thức mới: ws:// cho chuẩn thông thường và wss:// cho chuẩn secure (tương tự http:// và https://)
+
+Unix socket là một kết nối chia sẻ dữ liệu giữa các process khác nhau trong cùng một máy tính. Khác với Web socket sử dụng một giao tiếp mạng để kết nối trên môi trường internet, Unix socket được thực hiện ở nhân hệ điều hành nhờ vậy có thể tránh được các bước như kiểm tra routing, do đó đem lại tốc độ nhanh hơn và nhẹ hơn.
+
+- Đầu tiên client sẽ mở một kết nối TCP và cố gắng kết nối với server qua một PORT quy định.
+
+![image](https://hackmd.io/_uploads/rJVwye1n6.png)
+
+- Nếu kết nối thành công, server chấp nhận kết nối nó sẽ mở ra một PORT và duy trì kết nối này. Kể từ đây, cặp endpoint <Client_IP, PORT1> vs <Server_IP, PORT2> được đặt một trạng thái là Keep-Alive, tức là kết nối có còn sống hay không. Việc đặt trạng thái là còn sống hay không phụ thuộc vào 3 yếu tố chính là khoảng thời gian không có tín hiệu, khoảng thời gian chờ bên kia phản hồi và số lần thử lại nếu kết nối gặp lỗi.
+
+![image](https://hackmd.io/_uploads/HkKOkeynT.png)
+
+Sở dĩ kết nối được duy trì là do PORT đã mở thì sẽ không đóng lại cho đến khi các điều kiện nói ở trên bị vi phạm hoặc client gửi yêu cầu đóng kết nối.
+
+Nói dễ hiểu hơn, client thiết lập một kết nối đến server để giao tiếp và nó chỉ việc ngồi nghe (listening) mà không phải gửi request liên tục. Server thấy có dữ liệu mới sẽ kiểm tra xem trạng thái kết nối Keep-Alive, nếu kết nối còn nó sẽ gửi dữ liệu qua cho client.
+
+Socket sử dụng giao thức UDP, client và server sẽ không thiết lập kết nối, server chỉ cần biết địa chỉ client và đẩy dữ liệu đến đó mà không cần biết dữ liệu có tới đầy đủ hay không.
+
+- Dựa trên giao thức mạng, người ta phân ra làm 2 dạng socket.
+
+**Stream socket**: Dựa trên giao thức TCP, việc truyền dữ liệu chỉ thực hiện khi client với server đã thiết lập kết nối. Stream socket còn gọi là socket hướng kết nối.
+
+**Datagram socket:** Dựa trên giao thức UDP, việc truyền dữ liệu không cần thiết lập kết nối. Còn gọi là socket không hướng kết nối.
+
+Trong thực tế, Datagram socket thường sử dụng để đẩy đi dữ liệu tin nhắn chẳng hạn như chat game, server cứ đẩy liên tục các tin nhắn mới mà không cần quan tâm client đã nhận được hay chưa, đơn giản là nó làm tăng tốc độ xử lý trong game.
 
 - **Lỗ hổng bảo mật WebSockets**
   - Dữ liệu đầu vào do người dùng cung cấp được truyền tới máy chủ có thể được xử lý theo những cách không an toàn, dẫn đến các lỗ hổng như chèn SQL hoặc chèn thực thể bên ngoài XML.
@@ -504,3 +532,5 @@ mình đã viết lại script khai thác
 ![image](https://hackmd.io/_uploads/BJQUXEt9a.png)
 
 ![image](https://hackmd.io/_uploads/ByvYmNK56.png)
+
+ <img  src="https://3198551054-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FVvHHLY2mrxd5y4e2vVYL%2Fuploads%2FF8DJirSFlv1Un7WBmtvu%2Fcomplete.gif?alt=media&token=045fd197-4004-49f4-a8ed-ee28e197008f">
