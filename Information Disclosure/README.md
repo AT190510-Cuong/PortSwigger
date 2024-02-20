@@ -111,7 +111,7 @@ Submit phiên bản để hoàn thành thử thách:
 
 mình đã viết lại script khai thác
 
-```python!
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -186,7 +186,7 @@ trong đây chứa nội dung SECRET_KEY mà mình cần tìm là **qpgt33xy2xvd
 
 mình đã viết script khai thác
 
-```python!
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -261,7 +261,7 @@ Click vào file `ProductTemplate.java.bak` thu được database password:
 
 mình đã viết script khai thác
 
-```python!
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -348,7 +348,7 @@ Thực hiện xóa user carlos và mình solve đươc lab
 
 mình đã viết script khai thác
 
-```python!
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -426,7 +426,7 @@ và mình vào đọc được mật khẩu của admin là **wli2f2dwpjhhp5x7k4
 
 mình đã viết script khai thác
 
-```python!
+```python
 #!/usr/bin/python3.7
 import requests
 import re
