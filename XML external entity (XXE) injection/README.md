@@ -1,4 +1,4 @@
-\# XML external entity (XXE) injection
+# XML external entity (XXE) injection
 
 ![image](https://hackmd.io/_uploads/r1upa8y2p.png)
 
@@ -65,6 +65,7 @@ XML khi sai cú pháp vs cú pháp đúng
 #### Document Type Definition(DTD)
 
 - DTD (document type definitions) - dịch nôm ra DTD dùng để "định nghĩa loại tài liệu" thông qua việc xác định cấu trúc cũng như chỉ ra format hợp lệ của các elements và attributes trong file xml.
+
 - DTD (document type definition) là thẻ đặc biệt giúp chúng ta có thể include như trong PHP. Nó giống như cho phép chúng ta định nghĩa 1 biến, tài nguyên mới để chúng ta sử dụng, và trong đó chúng ta có thể định nghĩa 1 tài nguyên là EXTERNAL ENTITY giúp chúng ta có thể đọc 1 file hay 1 url
 - XML DTD chứa các khai báo (declaraion) nhằm dựng nên cấu trúc của một file XML, loại dữ liệu hoặc là các item khác. DTD được khai báo với DOCTYPE elemt ở đầu file XML. DTD có thể tự định nghĩa ở trong chính file XML (Internal DTD) hoặc có thể được load ở ngoài (External DTD)
 - ví dụ dưới đây là ví dụ về một External DTD. Tức là bản thân DTD là một file, nằm ngoài file xml
@@ -177,6 +178,8 @@ Example:
 Output:
 <author>123 cuong.com</author>
 ```
+
+![image](https://hackmd.io/_uploads/HJgqxcr2T.png)
 
 - Ví dụ về External DTD Entity:
 
@@ -417,7 +420,7 @@ dbf.setExpandEntityReferences(false);
 
 etree thuộc thư viện lxml trong Python:
 
-```python
+```python!
 from lxml import etree
 xmlData = etree.parse(xmlSource,etree.XMLParser(resolve_entities=False))
 ```
@@ -478,7 +481,7 @@ server không có cơ chế validate XML này. Do đó, mình có thể định 
 
 mình đã viết lại script khai thác
 
-```python
+```python!
 #!/usr/bin/python3.7
 import requests
 import re
@@ -557,7 +560,7 @@ và tương tự như vậy mình liệt kê được data trong folder admin
 
 mình đã viết lại script khai thác
 
-```python
+```python!
 #!/usr/bin/python3.7
 import requests
 import re
@@ -609,7 +612,7 @@ Dự đoán trang web thực hiện phân tích cú pháp dữ liệu XML, chún
 - Tuy trang web trả về thông báo "Invalid product ID" nhưng trước đó đã thực hiện quá trình phân tích cú pháp XML, dẫn đến client Burp Collaborator nhận được request DNS lookup gửi từ server victim:
   mình đã viết script khai thác
 
-```python
+```python!
 #!/usr/bin/python3.7
 import requests
 import re
@@ -673,7 +676,7 @@ Sau khi gửi request, client Collaborator nhận được yêu cầu phân gi�
 
 mình đã viết script khai thác
 
-```python
+```python!
 #!/usr/bin/python3.7
 import requests
 import re
@@ -873,7 +876,7 @@ mình dùng payload này
 
 mình đã viết script khai thác
 
-```python
+```python!
 #!/usr/bin/python3.7
 import requests
 import re
@@ -996,7 +999,7 @@ productId=<foo+xmlns%3axi%3d"http%3a//www.w3.org/2001/XInclude"><xi%3ainclude+pa
 
 mình đã viết lại script khai thác
 
-```python
+```python!
 #!/usr/bin/python3.7
 import requests
 import re
