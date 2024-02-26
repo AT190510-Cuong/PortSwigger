@@ -214,7 +214,7 @@ function trackSearch(query) {
 
 - chức năng `document.write` được gọi với dữ liệu lấy từ `location.search` và nó hiện dữ liệu ra giao diện thông qua chuỗi search chúng ta nhập vào
 - Đoạn script này cho ta thấy cách xử lý khi ta search một đoạn ký tự, đầu tiên biến query sẽ lấy cái ta search trên URL bằng URLSearchParams, ở đây /?search= thì giá trị của biến query chính là “a”. Nếu tồn tại query thì ta sẽ thực hiện hàm trackSearch, nơi mà nó sẽ tạo một thẻ `<img>` ở tracker.gif với từ khóa tìm kiếm là giờ sẽ trở thành một phần của URL của hình ảnh
-- mình sẽ tìm cách để kết thúc đoạn tạo thẻ `<img>`, rồi chèn thẻ script vào để thực thi, payload tìm kiếm của em sẽ là:`"><script>alert('XSS')</script>`, ở đây thì dấu > đầu tiên sẽ kết thúc chuỗi tạo thẻ <img>, sau đó em thực thi lệnh js với thẻ script, cuối cùng là câu lệnh này sẽ viết ra "> vì nó là phần cuối của đoạn code nếu em inject vào. Để cụ thể hơn thì khi mình tìm kiếm với payload trên, câu lệnh document.write sẽ có dạng:
+- mình sẽ tìm cách để kết thúc đoạn tạo thẻ `<img>`, rồi chèn thẻ script vào để thực thi, payload tìm kiếm của mình sẽ là:`"><script>alert('XSS')</script>`, ở đây thì dấu > đầu tiên sẽ kết thúc chuỗi tạo thẻ <img>, sau đó mình thực thi lệnh js với thẻ script, cuối cùng là câu lệnh này sẽ viết ra "> vì nó là phần cuối của đoạn code nếu mình inject vào. Để cụ thể hơn thì khi mình tìm kiếm với payload trên, câu lệnh document.write sẽ có dạng:
 
 ```javascript
 document.write(<img src="/resources/images/tracker.gif?searchTerms="><script>alert('XSS')</script>">');
@@ -633,7 +633,7 @@ CTRL+U mình được đoạn code xử lý javascript
             document.write('<option selected>'+store+'</option>');
         }
         for(var i=0;i<stores.length;i++) {
-            if(stores[i] ``` store) {
+            if(stores[i] === store) {
             continue;
             }
             document.write('<option>'+stores[i]+'</option>');
@@ -697,7 +697,7 @@ link: https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-an
 ### Phân tích
 
 - Lab này chứa lỗ hổng DOM-based XSS ở biểu thức AngularJS trong chức năng tìm kiếm. AngularJS là một thư viện javascript phổ biến, nó sẽ quét lấy nội dung của HTML nodes chứa thuộc tính ng-app (câu lệnh chỉ thị của AngularJS). Khi chị thỉ được thêm vào code HTML, ta có thể thực thi biểu thức javascript ở trong 2 dấu ngoặc nhọn: {{}}. Kĩ thuật này rất hữu ích khi dấu <> bị mã hóa. Để solve này thì mình cần phải thực thi tấn công XSS và thực thi câu lệnh alert
-- mình đã tìm kiếm cách sử dụng hàm nào để bypass và thực hiện câu lệnh JS, và em đã tìm thấy thứ này ở PayLoadAllTheThing
+- mình đã tìm kiếm cách sử dụng hàm nào để bypass và thực hiện câu lệnh JS, và mình đã tìm thấy thứ này ở PayLoadAllTheThing
 
 ![image](https://hackmd.io/_uploads/BJ54w7DqT.png)
 
@@ -1100,7 +1100,7 @@ link: https://portswigger.net/web-security/cross-site-scripting/contexts/lab-htm
 
 ![image](https://hackmd.io/_uploads/By4KEcP9T.png)
 
-Tiếp đến là làm như thế nào để victim bị, thì em đã nghĩ đến việc điều hướng của thẻ script, sử dụng `window.location` để trang web điều hướng sang payload:
+Tiếp đến là làm như thế nào để victim bị, thì mình đã nghĩ đến việc điều hướng của thẻ script, sử dụng `window.location` để trang web điều hướng sang payload:
 
 ```javascript
 <script>window.location.href="https://0ab7004a047ddc3980fc3fac00a400d6.web-security-academy.net/?search=<xss+autofocus+tabindex=1++onfocus=alert(document.cookie)></xss>"</script>
@@ -1179,7 +1179,7 @@ Khi truy cập trang web, có thể thấy canonical link chính là đường d
 
 ### Khai thác
 
-- sử dấu `?` để lừa truyền vào tham số,vì nếu em chỉ thêm dấu `?` rồi ngắt chuỗi href
+- sử dấu `?` để lừa truyền vào tham số,vì nếu mình chỉ thêm dấu `?` rồi ngắt chuỗi href
 
 `?'accesskey='x'onclick='alert(1)` và gửi payload.
 
@@ -1268,7 +1268,7 @@ link: https://portswigger.net/web-security/cross-site-scripting/contexts/lab-jav
 
 ### Phân tích
 
-- Lab này chứa lỗ hổng reflected XSS ở chức năng tìm kiếm khi mà dấu` <> ""` đã bị HTML encode và dấu `''` đã bị escaped. Để solve lab thì em cần thoát khỏi js string và thực hiện chức năng alert
+- Lab này chứa lỗ hổng reflected XSS ở chức năng tìm kiếm khi mà dấu` <> ""` đã bị HTML encode và dấu `''` đã bị escaped. Để solve lab thì mình cần thoát khỏi js string và thực hiện chức năng alert
   Trang web có chức năng search, và khi search thì chức năng js sẽ xuất hiện, cụ thể đoạn code js là:
 
 ```javascript
@@ -1468,7 +1468,7 @@ link: https://portswigger.net/web-security/cross-site-scripting/exploiting/lab-s
 
 ### Phân tích
 
-- Lab này chứa lỗ hổng stored XSS ở chức năng comment. Nạn nhân sẽ xem tất cả comment được đăng lên, để solve lab thì em cần khai thác lỗ hổng nhắm chiếm được session cookie của nạn nhân, và dùng nó để đóng giả làm nạn nhân
+- Lab này chứa lỗ hổng stored XSS ở chức năng comment. Nạn nhân sẽ xem tất cả comment được đăng lên, để solve lab thì mình cần khai thác lỗ hổng nhắm chiếm được session cookie của nạn nhân, và dùng nó để đóng giả làm nạn nhân
 - Tương tự các bài trên, chức năng comment bị dính Stored XSS. Kiểm tra với trường comment với `<script>alert(1)</script>` thì thấy attack thành công.
 - ![image](https://hackmd.io/_uploads/B1eQoddq6.png)
 
@@ -2142,3 +2142,5 @@ print(soup)
 mục đích của chúng ta đã hoàn thành và mình cũng đã giải quyết được bài lab này
 
 ![image](https://hackmd.io/_uploads/BkrhjadcT.png)
+
+<img  src="https://3198551054-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FVvHHLY2mrxd5y4e2vVYL%2Fuploads%2FF8DJirSFlv1Un7WBmtvu%2Fcomplete.gif?alt=media&token=045fd197-4004-49f4-a8ed-ee28e197008f">
