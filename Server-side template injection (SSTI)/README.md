@@ -1,6 +1,6 @@
 # Server-side template injection (SSTI)
 
-## Khái niệm & Tác hại & Khai thác
+## Khái niệm & Tác hại & Khai thác & Phòng tránh
 
 - **Khái niệm**
   - Theo thời gian và nhu cầu, các dữ liệu hiển thị trên trang web không ngừng thay đổi. Ba yếu tố cơ bản nhất tạo nên một trang web là HTML, CSS, Javascript. Để thêm, sửa, xóa chức năng, dữ liệu, thay đổi bố cục giao diện dẫn đến lập trình viên cần chỉnh sửa toàn bộ source code - tiêu tốn tài nguyên, thời gian. Bởi vậy kỹ thuật template ra đời. Cách thức hoạt động cơ bản của ngôn ngữ template bao gồm back-end rendering và front-end rendering:
@@ -117,6 +117,10 @@ $template->assign('username'， get Username From Cookie() )；
 $template->assign('time'， microtime(true) )；
 $template->show()；
 ```
+
+### Phòng tránh
+
+- Để ngăn chặn SSTI, lập trình viên nên thực hiện render template trước, sau đó mới thay thế giá trị các tham số vào output.
 
 ## 1. Lab: Basic server-side template injection
 
@@ -443,7 +447,7 @@ mình dùng payload sau encode URL và gửi và gửi gói tin
 
 mình đã viết lại mã khai thác
 
-```python
+```python=
 #!/usr/bin/python3.7
 import requests
 from bs4 import BeautifulSoup
@@ -629,7 +633,7 @@ Truy cập xem avatar, ta thấy nội dung file `/etc/passwd` đã được tr�
 
 được source code class User:
 
-```php
+```php=
 <?php
 
 class User {
@@ -708,3 +712,129 @@ Gọi user.gdprDelete() để xóa.
 mục đích của chúng ta đã hoàn thành và mình cũng đã giải được bài lab này
 
 ![image](https://hackmd.io/_uploads/HJI_y145T.png)
+
+## Chú thích
+
+### **class**
+
+- Trong Python, **class** là một thuộc tính đặc biệt của một đối tượng. Khi được gọi trên một đối tượng, nó trả về một tham chiếu đến lớp của đối tượng đó. Điều này có thể hữu ích khi bạn muốn biết lớp mà một đối tượng thuộc về.
+
+Ví dụ, nếu bạn có một đối tượng obj, bạn có thể truy cập lớp của nó bằng cách sử dụng obj.**class**. Điều này cho phép bạn truy cập các phương thức và thuộc tính của lớp mà obj thuộc về.
+
+VD:
+
+```python!
+class MyClass:
+    def __init__(self, x):
+        self.x = x
+
+obj = MyClass(5)
+print(obj.__class__)  # In ra: <class '__main__.MyClass'>
+```
+
+- Trong trường hợp này, obj.**class** trả về lớp MyClass.
+- Trong tình huống ứng dụng không chứa cơ chế filter, chúng ta luôn có thể truy cập các đối tượng `'', (), []`. Kết hợp với `__class__`, chẳng hạn với payload `''.__class__`
+
+![image](https://hackmd.io/_uploads/rJmyDaqna.png)
+
+### **bases**
+
+- cho phép truy cập tới lớp cha của đối tượng hiện tại. Ví dụ:
+
+VD:
+
+````python!
+class Animal:
+    def __init__(self, name):
+        self.name = ```name
+
+class Dog(Animal):
+    def __init__(self, name, breed):
+        super().__init__(name)
+        self.breed = breed
+
+dog = Dog("Buddy", "Golden Retriever")
+print(dog.__class__.__bases__)  # Output: (<class '__main__.Animal'>,)
+````
+
+- Chúng ta cần truy cập đến lớp Object trong ứng dụng - là lớp cha của các lớp str, tuple, list. Chẳng hạn với payload `().__class__.__bases__`
+
+### **mro**
+
+- Trong Python, **mro** là một thuộc tính đặc biệt của một lớp (class). **mro** là viết tắt của "Method Resolution Order" (Thứ tự giải quyết phương thức). Nó là một tuple chứa thứ tự mà Python sẽ tìm kiếm các phương thức khi gọi chúng trên một đối tượng của lớp đó.
+
+- Khi bạn gọi một phương thức trên một đối tượng của một lớp, Python sẽ tìm kiếm phương thức đó trong lớp của đối tượng đó, sau đó trong các lớp kế thừa của lớp đó theo thứ tự được xác định bởi **mro**.
+
+VD:
+
+```python!
+class A:
+    def method(self):
+        print("Method from class A")
+
+class B(A):
+    def method(self):
+        print("Method from class B")
+
+class C(A):
+    def method(self):
+        print("Method from class C")
+
+class D(B, C):
+    pass
+
+obj = D()
+obj.method()
+print(D.__mro__)
+```
+
+kết quả
+
+```python!
+Method from class B
+(<class '__main__.D'>, <class '__main__.B'>, <class '__main__.C'>, <class '__main__.A'>, <class 'object'>)
+```
+
+Trong ví dụ này, D kế thừa từ B và C. Khi gọi phương thức method() trên một đối tượng của D, Python tìm kiếm phương thức đầu tiên trong lớp D, sau đó trong B, sau đó trong C, và cuối cùng là trong A, và nếu không tìm thấy thì sẽ tìm trong lớp object (lớp cơ sở của tất cả các lớp trong Python). Điều này phản ánh trong giá trị của D.**mro**.
+
+### **subclasses**
+
+- Trong Python, **subclasses** là một phương thức đặc biệt của lớp (class). Khi được gọi trên một lớp, phương thức này trả về một danh sách các lớp con trực tiếp của lớp đó.
+
+VD:
+
+```python!
+class Parent:
+    pass
+
+class Child1(Parent):
+    pass
+
+class Child2(Parent):
+    pass
+
+class Grandchild(Child1):
+    pass
+
+print(Parent.__subclasses__())  # In ra: [<class '__main__.Child1'>, <class '__main__.Child2'>]
+print(Child1.__subclasses__())  # In ra: [<class '__main__.Grandchild'>]
+print(Child2.__subclasses__())  # In ra: []
+```
+
+- Trong ví dụ này, Parent có hai lớp con trực tiếp là Child1 và Child2. Child1 có một lớp con trực tiếp là Grandchild, trong khi Child2 không có lớp con nào.
+
+- Lưu ý rằng **subclasses** chỉ trả về các lớp con trực tiếp, không phải tất cả các lớp con trong toàn bộ hệ thống lớp.
+
+### **init**
+
+- là phương thức khởi tạo lớp
+- Chúng ta thường sử dụng `__init__` làm cơ sở gọi `__globals__`.
+- `__globals__` trả về tất cả module, phương thức, biến có thể sử dụng
+
+## Tham khảo
+
+- https://www.paloaltonetworks.com/blog/prisma-cloud/template-injection-vulnerabilities/
+- `https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection?source=post_page-----c6e9fbb20743--------------------------------`
+- https://viblo.asia/p/server-side-template-injection-vulnerabilities-ssti-cac-lo-hong-ssti-phan-3-Ny0VGjAYLPA
+
+<img  src="https://3198551054-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FVvHHLY2mrxd5y4e2vVYL%2Fuploads%2FF8DJirSFlv1Un7WBmtvu%2Fcomplete.gif?alt=media&token=045fd197-4004-49f4-a8ed-ee28e197008f">
