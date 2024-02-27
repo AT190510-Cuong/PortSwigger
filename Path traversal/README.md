@@ -142,6 +142,39 @@ mục đích của chúng ta đã hoàn thành và mình cũng đã giải đư�
 
 ![image](https://hackmd.io/_uploads/rk_nnn8Ya.png)
 
+### Scan trên Burp suite pro
+
+![image](https://hackmd.io/_uploads/B1gwy0q2a.png)
+
+![image](https://hackmd.io/_uploads/HJ6XkA53p.png)
+
+![image](https://hackmd.io/_uploads/BJg2JCq2p.png)
+
+- vào scan configuration và chọn new và đặt tên
+- sau đó vào issues report search lỗ hổng file path traversal và chọn để attach
+
+![image](https://hackmd.io/_uploads/HyogbA5nT.png)
+
+sau đó ấn save và mình được task attack có tên **cuong**
+
+![image](https://hackmd.io/_uploads/H1ss-R52a.png)
+
+nhấn OK và burp pro đã tự động scan lab cho chúng ta
+
+![image](https://hackmd.io/_uploads/Bk7SbAc3a.png)
+
+và chúng ta thấy có thông báo lỗ hổng file path traversal bên góc phải
+
+- mình vào view detail và được
+  ![image](https://hackmd.io/_uploads/BkPszCc3a.png)
+
+burp đã dùng payload `..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2fetc%2fpasswd` và đọc được file /etc/passwd
+![image](https://hackmd.io/_uploads/Skc17Rc3a.png)
+
+và tự động lab của mình đã được solve
+
+![image](https://hackmd.io/_uploads/Hkzu7RqnT.png)
+
 ## 2. Lab: File path traversal, traversal sequences blocked with absolute path bypass
 
 link: https://portswigger.net/web-security/file-path-traversal/lab-absolute-path-bypass
