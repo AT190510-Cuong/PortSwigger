@@ -119,3 +119,5 @@ Lưu ý rằng mã hóa HTML không đủ để ngăn chặn các cuộc tấn c
 - https://www.paloaltonetworks.com/blog/prisma-cloud/template-injection-vulnerabilities/
 - https://bergee.it/blog/xss-via-angular-template-injection/
 - https://book.hacktricks.xyz/pentesting-web/client-side-template-injection-csti
+
+<img  src="https://3198551054-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FVvHHLY2mrxd5y4e2vVYL%2Fuploads%2FF8DJirSFlv1Un7WBmtvu%2Fcomplete.gif?alt=media&token=045fd197-4004-49f4-a8ed-ee28e197008f">
