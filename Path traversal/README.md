@@ -116,7 +116,7 @@ bài không có bất cứ một lớp phòng vệ nào để ngăn chặn Path 
 
 mình cũng đã viết lại script khai thác :100:
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -140,7 +140,7 @@ print(response.text) # hiển thị response có flag
 
 hoặc mình dùng code typescript
 
-```typescript!
+```typescript
 import axios from "axios";
 
 const url: string =
@@ -228,7 +228,7 @@ và mình đã không đọc được file này như bài trước có vẻ như
 
 mình cũng đã viết lại script khai thác :100:
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -287,7 +287,7 @@ có vẻ là các ký tự '.\./' đã bị loại bỏ nhưng nếu tôi gấp 
 
 tôi đã viết lại script khai thác
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -351,7 +351,7 @@ vẫn chưa được mình thử encode lần nữa và may mắn là đã thàn
 
 mình đã viết lại script khai thác:
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -406,7 +406,7 @@ link: https://portswigger.net/web-security/file-path-traversal/lab-validate-star
 
 và mình cũng đã viết lại script
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
@@ -462,7 +462,7 @@ link: https://portswigger.net/web-security/file-path-traversal/lab-validate-file
 
 mình cũng viết lại script khai thác:
 
-```python=
+```python
 #!/usr/bin/python3.7
 import requests
 import re
