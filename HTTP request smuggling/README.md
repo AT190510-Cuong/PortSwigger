@@ -69,7 +69,7 @@ link: https://portswigger.net/web-security/request-smuggling/lab-basic-cl-te
 
 - Theo gợi ý của đề bài, front end server sử dụng CL để "cắt request", còn backend server thì sử dụng TE, vậy ta có thể áp dụng cách khai thác như sau:
 
-```http!
+```http
 POST / HTTP/1.1
 Host: YOUR-LAB-ID.web-security-academy.net
 Connection: keep-alive
@@ -147,7 +147,7 @@ link: https://portswigger.net/web-security/request-smuggling/lab-basic-te-cl
 
 mình dùng request như sau
 
-```http!
+```http
 POST / HTTP/1.1
 Host: YOUR-LAB-ID.web-security-academy.net
 Content-Type: application/x-www-form-urlencoded
@@ -165,7 +165,7 @@ x=1
 
 - Lúc này, front-end server coi body là 2 chunked size `5a`, chunked size `5a` sẽ chứa:
 
-```http!
+```http
 GPOST / HTTP/1.1\r\n
 Content-Type: application/x-www-form-urlencoded\r\n
 Content-Length: 13\r\n
@@ -225,7 +225,7 @@ link: https://portswigger.net/web-security/request-smuggling/lab-obfuscating-te-
 
 với request
 
-```http!
+```http
 POST / HTTP/1.1
 Host: YOUR-LAB-ID.web-security-academy.net
 Content-Type: application/x-www-form-urlencoded
@@ -286,7 +286,7 @@ link: https://portswigger.net/web-security/request-smuggling/finding/lab-confirm
 
 - Để xác định đây là dạng CL.TE, ta gửi request sau:
 
-```http!
+```http
 POST / HTTP/1.1
 Host: YOUR-LAB-ID.web-security-academy.net
 Content-Type: application/x-www-form-urlencoded
@@ -346,7 +346,7 @@ link: https://portswigger.net/web-security/request-smuggling/finding/lab-confirm
 
 Để xác định đây là dạng TE.CL, ta gửi request sau:
 
-```http!
+```http
 POST / HTTP/1.1
 Host: YOUR-LAB-ID.web-security-academy.net
 Content-Type: application/x-www-form-urlencoded
@@ -425,7 +425,7 @@ thì bị báo duplicate header Host với request sau.
 
 ![image](https://hackmd.io/_uploads/S1DEdHoa6.png)
 
-```http!
+```http
 POST / HTTP/1.1
 Host: YOUR-LAB-ID.web-security-academy.net
 Content-Type: application/x-www-form-urlencoded
@@ -446,7 +446,7 @@ x=
 
 - bây giờ bạn có thể truy cập bảng quản trị và chỉ cần xóa carlos
 
-```http!
+```http
 POST / HTTP/1.1
 Host: YOUR-LAB-ID.web-security-academy.net
 Content-Type: application/x-www-form-urlencoded
@@ -491,7 +491,7 @@ link: https://portswigger.net/web-security/request-smuggling/exploiting/lab-bypa
 
 ### Khai thác
 
-```http!
+```http
 POST / HTTP/1.1
 Host: YOUR-LAB-ID.web-security-academy.net
 Content-length: 4
@@ -510,7 +510,7 @@ x=1
 
 Quan sát rằng yêu cầu hợp nhất đã /adminbị từ chối do không sử dụng tiêu đề `Host: localhost`.
 
-```http!
+```http
 POST / HTTP/1.1
 Host: YOUR-LAB-ID.web-security-academy.net
 Content-Type: application/x-www-form-urlencoded
@@ -531,7 +531,7 @@ x=1
 
 và chúng ta đã vào được trang quản tị giờ chỉ cần xóa người dùng carlos
 
-```http!
+```http
 POST / HTTP/1.1
 Host: YOUR-LAB-ID.web-security-academy.net
 Content-length: 4
@@ -573,7 +573,7 @@ Duyệt đến /adminvà quan sát rằng bảng quản trị chỉ có thể đ
 
 Ta detect được đây là dạng CL.TE
 
-```http!
+```http
 POST / HTTP/1.1
 Host: YOUR-LAB-ID.web-security-academy.net
 Content-Type: application/x-www-form-urlencoded
@@ -604,7 +604,7 @@ vậy ta xem được header cần tìm là `X-MmJSse-Ip: 42.117.139.94`
 
 ### Khai thác
 
-```http!
+```http
 POST / HTTP/1.1
 Host: 0a11000e0350f4bd80e68f6800360077.web-security-academy.net
 Content-Type: application/x-www-form-urlencoded
@@ -627,7 +627,7 @@ x=1
 - thành công vào được trang quản trị
   Xóa user carlos.
 
-```http!
+```http
 POST / HTTP/1.1
 Host: 0a11000e0350f4bd80e68f6800360077.web-security-academy.net
 Content-Type: application/x-www-form-urlencoded
@@ -683,7 +683,7 @@ link: https://portswigger.net/web-security/request-smuggling/exploiting/lab-reve
 
 - Lợi dụng HTTP request smuggling dạng CL.TE, ta khến back-end xử lý request sau là post comment với trường comment rỗng → request sau của user khác sẽ bị nối vào trường comment này và hiển thị lên comment. Content-Length ở đây ta sẽ chỉnh sao cho comment hiển thị chứa cookie cần lấy.
 
-```http!
+```http
 POST / HTTP/1.1
 Host: 0aa8000d03aedbd686d0cab5005100a9.web-security-academy.net
 Content-Type: application/x-www-form-urlencoded
@@ -740,7 +740,7 @@ link: https://portswigger.net/web-security/request-smuggling/exploiting/lab-deli
 
 - Đây là dạng bài CL.TE nên ta sẽ dùng payload sau với User-Agent là XSS payload.
 
-```http!
+```http
 POST / HTTP/1.1
 Host: YOUR-LAB-ID.web-security-academy.net
 Content-Type: application/x-www-form-urlencoded
@@ -801,7 +801,7 @@ link: https://portswigger.net/web-security/request-smuggling/advanced/response-q
 
 Smuggling complete request với đường dẫn không tồn tại thành công với chunked encoding → H2.TE
 
-```http!
+```http
 POST / HTTP/2
 Host: 0a6d0015036f77ef84a50e7100dc00ec.web-security-academy.net
 Transfer-Encoding: chunked
@@ -837,7 +837,7 @@ link: https://portswigger.net/web-security/request-smuggling/browser/cl-0/lab-cl
 
 Xóa user carlos.
 
-```http!
+```http
 GET /resources/labheader/images/logoAcademy.svg HTTP/2
 Host: 0aca003a03504830825a07d0009100cb.web-security-academy.net
 Cookie: session=6YS52cjBCt8Sx0GyFG4ZBBYvKzb5Q1c5
@@ -898,7 +898,7 @@ Bạn có thể đăng nhập vào tài khoản của mình bằng thông tin đ
 - Ta gửi request tấn công smuggling với request đến /my-account.
 - Đợi 1 chút để victim truy cập trang. Khi đó, victim sẽ gửi request đến /resources/js/tracking.js đầu tiên → nhận response smuggled của /my-account chứa thông tin của nạn nhân → cache lưu response đối với /resources/js/tracking.js.
 
-```http!
+```http
 POST / HTTP/1.1
 Host: 0adf003604e3213683597818002400e9.web-security-academy.net
 Content-Type: application/x-www-form-urlencoded
@@ -946,13 +946,13 @@ Giờ mình send request đến /resources/js/tracking.js và sẽ nhận đư�
 
 - Trường Transfer-Encoding thì chỉ ra kiểu truyền tải nào được áp dụng tới phần thân thông báo để cho việc truyền tải một cách an toàn giữa người gửi và người nhận. Ta sẽ nói đến kiểu chunked.
 
-```http!
+```http
 Transfer-Encoding: chunked
 ```
 
 Khi dữ liệu body được chunked, nó sẽ có dạng như sau: ký tự b đầu tiên chính là kích thước của đoạn chunked theo dạng hex, tiếp đến nội dung chunked, và kết thúc nội dung là số 0.
 
-```http!
+```http
 POST /search HTTP/1.1
 Host: normal-website.com
 Content-Type: application/x-www-form-urlencoded
@@ -965,7 +965,7 @@ q=smuggling
 
 VD:
 
-```http!
+```http
 POST / HTTP/1.1
 Host: vulnerable-website.com
 Content-Length: 3
