@@ -75,12 +75,14 @@
   - **Blind SQL injection**: Đây là kiểu tấn công mà kết quả của query bạn thao túng không gửi trả về trong response. Khoan! Không gửi kết quả gì về thì biết mịa gì mà tấn với chả công? Vâng, bởi vậy nó mới có tên gọi là “Blind” – tấn công kiểu mù quáng. Điểm nhấn quan trọng đối với kỹ thuật tấn công này là thử nghiệm các thay đổi trên query và ghi nhận sự khác biệt (nếu có) trong các response nhận về. Loại này hiển nhiên đòi hỏi kỹ thuật phức tạp và nhiều thời gian hơn để thử nghiệm và phân tích dữ liệu từ các response.
 
 - **Phân loại**
+- ![image](https://hackmd.io/_uploads/Sk6GkTHNC.png)
 - ![image](https://hackmd.io/_uploads/BJP_nr9qp.png)
+
   - **In-Band SQLi**: Các phản hồi nhận được kết quả truy vấn SQL. Được chia thành 2 loại:
     - **Union-based SQLi**: Sử dụng câu lệnh UNION trong các truy vấn SQL để truy cập vào db.
     - **Error-based SQLi**: Dựa vào lỗi trong câu lệnh SQL để xác định cấu trúc db từ đó tìm cách truy cập vào db.
   - **Blind SQLi**:
-  - một số câu lệnh thường sử dụng trong tấn công Blind SQL injection:
+
 - Length: độ dài:
 
 | database management system | Length syntax             |
