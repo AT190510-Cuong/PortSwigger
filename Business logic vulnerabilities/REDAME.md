@@ -865,6 +865,26 @@ POST /gift-card - Thực hiện submit gift code để được hoàn tiền
 
 Và chúng ta chỉ cần đợi tới khi số dư trong ví lớn hơn 1337$ là có thể đặt hàng
 
+![image](https://hackmd.io/_uploads/B1UwMxCdA.png)
+
+![image](https://hackmd.io/_uploads/Hyb_MgAOC.png)
+
+![image](https://hackmd.io/_uploads/B1udGg0OC.png)
+
+![image](https://hackmd.io/_uploads/HyGcflAdR.png)
+
+![image](https://hackmd.io/_uploads/BJvNIe0u0.png)
+
+![image](https://hackmd.io/_uploads/Hk7rLe0d0.png)
+
+![image](https://hackmd.io/_uploads/SJA-IxCuR.png)
+
+![image](https://hackmd.io/_uploads/HytZIe0dA.png)
+
+cách dùng macro
+
+- https://www.google.com/search?q=how+to+run+macro+in+burp+suit&rlz=1C1CHBF_enVN978VN978&oq=how+to+run+macro+in+burp+suit&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIHCAEQIRigATIHCAIQIRigATIHCAMQIRigATIHCAQQIRifBdIBCTEzNDE5ajBqN6gCALACAA&sourceid=chrome&ie=UTF-8#fpstate=ive&vld=cid:63ea224b,vid:J8Ykn4Pa2bc,st:0
+
 ## 11. Lab: Authentication bypass via encryption oracle
 
 link: https://portswigger.net/web-security/logic-flaws/examples/lab-logic-flaws-authentication-bypass-via-encryption-oracle
