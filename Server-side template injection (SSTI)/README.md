@@ -191,6 +191,16 @@ mục đích của chúng ta đã hoàn thành và mình cũng đã giải quy�
 
 ![image](https://hackmd.io/_uploads/r1ptBUm5T.png)
 
+### SSTImap
+
+```bash!
+./sstimap.py -u "https://0ad4005304ceda14802f049000f30094.web-security-academy.net/?message=*"
+```
+
+![image](https://hackmd.io/_uploads/BJA9pBe00.png)
+
+![image](https://hackmd.io/_uploads/BJw5fLeAA.png)
+
 ## 2. Lab: Basic server-side template injection (code context)
 
 link: https://portswigger.net/web-security/server-side-template-injection/exploiting/lab-server-side-template-injection-basic-code-context
@@ -723,7 +733,7 @@ Ví dụ, nếu bạn có một đối tượng obj, bạn có thể truy cập 
 
 VD:
 
-```python
+```python!
 class MyClass:
     def __init__(self, x):
         self.x = x
@@ -743,7 +753,7 @@ print(obj.__class__)  # In ra: <class '__main__.MyClass'>
 
 VD:
 
-````python
+````python!
 class Animal:
     def __init__(self, name):
         self.name = ```name
@@ -767,7 +777,7 @@ print(dog.__class__.__bases__)  # Output: (<class '__main__.Animal'>,)
 
 VD:
 
-```python
+```python!
 class A:
     def method(self):
         print("Method from class A")
@@ -790,7 +800,7 @@ print(D.__mro__)
 
 kết quả
 
-```python
+```python!
 Method from class B
 (<class '__main__.D'>, <class '__main__.B'>, <class '__main__.C'>, <class '__main__.A'>, <class 'object'>)
 ```
@@ -803,7 +813,7 @@ Trong ví dụ này, D kế thừa từ B và C. Khi gọi phương thức metho
 
 VD:
 
-```python
+```python!
 class Parent:
     pass
 
