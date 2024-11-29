@@ -1423,6 +1423,8 @@ mục đích của chúng ta đã hoàn thành và mình cũng giải được b
 
 ![image](https://hackmd.io/_uploads/B1IN9aesp.png)
 
+<img  src="https://3198551054-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FVvHHLY2mrxd5y4e2vVYL%2Fuploads%2FF8DJirSFlv1Un7WBmtvu%2Fcomplete.gif?alt=media&token=045fd197-4004-49f4-a8ed-ee28e197008f">
+
 ## Tìm hiểu
 
 ### Lỗ hổng deserialization trong ngôn ngữ PHP
@@ -1572,3 +1574,40 @@ echo "\nDeserialization done";
 ```
 
 ![image](https://hackmd.io/_uploads/B1lJ9KJjp.png)
+
+## 8. Lab: Exploiting Java deserialization with Apache Commons
+
+### Đề bài
+
+![image](https://hackmd.io/_uploads/BJ4CfDP7Jl.png)
+
+### Phân tích
+
+- Phòng thí nghiệm này sử dụng cơ chế phiên dựa trên tuần tự hóa và tải thư viện Apache Commons Collections. Mặc dù bạn không có quyền truy cập mã nguồn, bạn vẫn có thể khai thác phòng thí nghiệm này bằng cách sử dụng các chuỗi tiện ích được xây dựng sẵn.
+
+Để giải quyết phòng thí nghiệm, hãy sử dụng công cụ của bên thứ ba để tạo đối tượng tuần tự hóa độc hại chứa tải trọng thực thi mã từ xa. Sau đó, chuyển đối tượng này vào trang web để xóa tệp morale.txtkhỏi thư mục gốc của Carlos.
+
+Bạn có thể đăng nhập vào tài khoản của mình bằng thông tin đăng nhập sau:wiener:peter
+
+### Khai thác
+
+- vào môi trường lab của CBJS chạy lệnh
+
+```java
+java -jar ysoserial-all.jar CommonsCollections4 'rm /home/carlos/morale.txt' | base64 -w 0
+```
+
+![image](https://hackmd.io/_uploads/SJxGXvD71g.png)
+
+- copy payload vào session
+
+![image](https://hackmd.io/_uploads/SJYd7vPQkl.png)
+
+- thấy server xử lý lỗi
+- encode toàn bộ payload bằng URL encode
+
+![image](https://hackmd.io/_uploads/ryXjQvPX1e.png)
+
+- gửi request và solve được lab
+
+![image](https://hackmd.io/_uploads/HyBJVDv7yl.png)
