@@ -670,7 +670,7 @@ và mình đã giải quyết được lab này
 
 ![image](https://hackmd.io/_uploads/H1TG2AScp.png)
 
-## Lab: SameSite Strict bypass via sibling domain
+## 12. Lab: SameSite Strict bypass via sibling domain
 
 link: https://portswigger.net/web-security/csrf/bypassing-samesite-restrictions/lab-samesite-strict-bypass-via-sibling-domain
 
